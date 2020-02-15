@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>简单看一下 Spring 的缓存 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="为了速度： 缓存主要解决不同设备之间的速度差异问题，CPU和内存之间有一级，二级缓存。内存和硬盘之间又有缓存。Java里面的缓存也是内存和硬盘之间的缓存。缓存最重要的指标就是缓存的命中率，据说CPU的缓存命中率有98%？我们自己编写的程序能不能达到这么高的命中率呢？呵呵，我不知道。有待研究。 Spring Cache ： Spring Cache 就像是一个适配器，把市面上各种缓存框架都适配成了">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单看一下 Spring 的缓存">
+<meta property="og:url" content="https://threewater.xyz/2019/04/24/spring-cache/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="为了速度： 缓存主要解决不同设备之间的速度差异问题，CPU和内存之间有一级，二级缓存。内存和硬盘之间又有缓存。Java里面的缓存也是内存和硬盘之间的缓存。缓存最重要的指标就是缓存的命中率，据说CPU的缓存命中率有98%？我们自己编写的程序能不能达到这么高的命中率呢？呵呵，我不知道。有待研究。 Spring Cache ： Spring Cache 就像是一个适配器，把市面上各种缓存框架都适配成了">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-25T05:41:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单看一下 Spring 的缓存">
+<meta name="twitter:description" content="为了速度： 缓存主要解决不同设备之间的速度差异问题，CPU和内存之间有一级，二级缓存。内存和硬盘之间又有缓存。Java里面的缓存也是内存和硬盘之间的缓存。缓存最重要的指标就是缓存的命中率，据说CPU的缓存命中率有98%？我们自己编写的程序能不能达到这么高的命中率呢？呵呵，我不知道。有待研究。 Spring Cache ： Spring Cache 就像是一个适配器，把市面上各种缓存框架都适配成了">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-spring-cache" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">简单看一下 Spring 的缓存</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.04.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>为了速度：</p>
+<p>缓存主要解决不同设备之间的速度差异问题，CPU和内存之间有一级，二级缓存。内存和硬盘之间又有缓存。Java里面的缓存也是内存和硬盘之间的缓存。缓存最重要的指标就是缓存的命中率，据说CPU的缓存命中率有98%？我们自己编写的程序能不能达到这么高的命中率呢？呵呵，我不知道。有待研究。</p>
+<p>Spring Cache ：</p>
+<p>Spring Cache 就像是一个适配器，把市面上各种缓存框架都适配成了 “Spring 式” 的。他提供了很多注解，这些注解配合 AOP 可以使缓存处理代码和业务代码解耦。</p>
+<p>自己简单实现一个缓存：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheManager</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String,T&gt; cache=<span class="keyword">new</span> ConcurrentHashMap&lt;String, T&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getValue</span><span class="params">(String key)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cache.get(key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addOrUpdateCache</span><span class="params">(String key,T value)</span></span>&#123;</span><br><span class="line">        cache.put(key,value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">evitCache</span><span class="params">()</span></span>&#123;</span><br><span class="line">        cache.clear();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> CacheManager&lt;User&gt; cacheManager;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserService</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.cacheManager=<span class="keyword">new</span> CacheManager&lt;User&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUserById</span><span class="params">(String userId)</span></span>&#123;</span><br><span class="line">        User value = cacheManager.getValue(userId);</span><br><span class="line">        <span class="keyword">if</span>(value!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">"get from cache..."</span>);</span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">        &#125;</span><br><span class="line">        value=getFromDB(userId);</span><br><span class="line">        cacheManager.addOrUpdateCache(userId,value);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> User <span class="title">getFromDB</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"get from DB..."</span>+userId);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User(userId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reload</span><span class="params">()</span></span>&#123;</span><br><span class="line">        cacheManager.evitCache();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String userId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.userId=userId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        UserService userService = <span class="keyword">new</span> UserService();</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        System.out.println(<span class="string">"清除缓存"</span>);</span><br><span class="line">        userService.reload();</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">get from DB...<span class="number">100</span></span><br><span class="line">get from cache...</span><br><span class="line">清除缓存</span><br><span class="line">get from DB...<span class="number">100</span></span><br><span class="line">get from cache...</span><br></pre></td></tr></table></figure>
+
+<p>我们自己实现的缓存呢，一个典型的特点就是高耦合，不够优雅，我们可以想当然的通过AOP 把缓存代码抽取出来，例如，我们在调用 getUserById 方法前织入增强，判断userId是否存在于缓存中，如果存在，直接返回，如果不存在，再调用真实方法，然后在方法返回后注入增强，把返回值存入缓存中。其实这更像是一种通用的功能，所以Spring为我们提供了Spring Cache，使用它我们就可以实现缓存代码和实现代码分离。</p>
+<p>Spring Cache：</p>
+<p>Spring Cache 是Spring和核心功能，在Spring Context 包中。</p>
+<p>我们来看一个简单的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span>(<span class="string">"userService"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Cacheable</span>(<span class="string">"users"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUserById</span><span class="params">(String userId)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getFromDB(userId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> User <span class="title">getFromDB</span><span class="params">(String userId)</span> </span>&#123;<span class="comment">//这个方法只会被调用一次</span></span><br><span class="line">        System.out.println(<span class="string">"get from DB..."</span>+userId);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User(userId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        ApplicationContext context=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:spring-config.xml"</span>);</span><br><span class="line">        UserService userService = context.getBean(UserService.class);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.threewater"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">cache:annotation-driven</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cacheManager"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.support.SimpleCacheManager"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"caches"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">set</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"</span></span></span><br><span class="line"><span class="tag">                  <span class="attr">p:name</span>=<span class="string">"default"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"</span></span></span><br><span class="line"><span class="tag">                  <span class="attr">p:name</span>=<span class="string">"users"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get from DB...<span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到<code>@Cacheable</code> 可以对方法进行缓存，也就说，它会以参数作为键，以返回值作为值来缓存到Map中，对于很多参数的情况，Spring会根据所有的参数生成键，我们也可以通过SpEL表达式指定我们想要的键，也可以自己实现KeyGenerator来定义键，然后以Bean的形式配入xml，然后在这个注解中引用他。这个基于Mao的缓存实现是Spring自带的，一般我们会用第三方的Jar包来替代它。</p>
+<p><code>@Cacheable</code> 注解只能添加缓存，不能删除缓存。我们来看一下如何删除缓存，其实我们不删也行，一般的缓存框架都会有一些算法来删除很久没用的缓存，类似于垃圾回收机制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span>(<span class="string">"userService"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@CacheEvict</span>(<span class="string">"users"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeUser</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">        removeFromDB(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeFromDB</span><span class="params">(String userId)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"removed from DB"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ApplicationContext context=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:spring-config.xml"</span>);</span><br><span class="line">        UserService userService = context.getBean(UserService.class);</span><br><span class="line">        System.out.println(<span class="string">"first"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        System.out.println(<span class="string">"second"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        userService.removeUser(<span class="string">"100"</span>);</span><br><span class="line">        System.out.println(<span class="string">"third"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">        System.out.println(<span class="string">"fourth"</span>);</span><br><span class="line">        userService.getUserById(<span class="string">"100"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">first</span><br><span class="line">get from DB...<span class="number">100</span></span><br><span class="line">second</span><br><span class="line">removed from DB</span><br><span class="line">third</span><br><span class="line">get from DB...<span class="number">100</span></span><br><span class="line">fourth</span><br></pre></td></tr></table></figure>
+
+<p>那么如何清除缓存中所有元素呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict</span>(value = <span class="string">"users"</span>,allEntries = <span class="keyword">true</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeUser</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">    removeFromDB(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>清除一般发生在方法返回值之后，如何再调用方法之前清除呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict</span>(value = <span class="string">"users"</span>,beforeInvocation = <span class="keyword">true</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeUser</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">    removeFromDB(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用EhCache</p>
+<p>接下来我们来看一下EhCache怎么配。</p>
+<p>导包：spring-context-support，net.ehcache。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">"http://ehcache.org/ehcache.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--&lt;cacheManagerEventListenerFactory class="com.threewater.cache.MyCacheManagerListener"/&gt;--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">defaultCache</span> <span class="attr">maxEntriesLocalHeap</span>=<span class="string">"10000"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">persistence</span> <span class="attr">strategy</span>=<span class="string">"none"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">defaultCache</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">cache</span> <span class="attr">name</span>=<span class="string">"users"</span> <span class="attr">maxEntriesLocalHeap</span>=<span class="string">"1000"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">cacheEventListenerFactory</span> <span class="attr">class</span>=<span class="string">"com.threewater.cache.MyCacheEventListenerFacotory"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">persistence</span> <span class="attr">strategy</span>=<span class="string">"none"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">cache</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ehcache:annotation-driven</span> <span class="attr">cache-manager</span>=<span class="string">"ehCacheManager"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"ehCacheManager"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.ehcache.EhCacheCacheManager"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:cacheManager-ref</span>=<span class="string">"ehcache"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"ehcache"</span> <span class="attr">class</span>=<span class="string">"org.springframework.cache.ehcache.EhCacheManagerFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:configLocation</span>=<span class="string">"ehcache.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyCacheEventListener</span> <span class="keyword">extends</span> <span class="title">CacheEventListenerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyElementPut</span><span class="params">(Ehcache cache, Element element)</span> <span class="keyword">throws</span> CacheException </span>&#123;</span><br><span class="line">        System.out.println(element.getObjectKey()+<span class="string">"added"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyElementRemoved</span><span class="params">(Ehcache cache, Element element)</span> <span class="keyword">throws</span> CacheException </span>&#123;</span><br><span class="line">        System.out.println(element.getObjectKey()+<span class="string">"removed"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyCacheEventListenerFacotory</span> <span class="keyword">extends</span> <span class="title">CacheEventListenerFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheEventListener <span class="title">createCacheEventListener</span><span class="params">(Properties properties)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyCacheEventListener();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span>(<span class="string">"userService"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Cacheable</span>(<span class="string">"users"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUserById</span><span class="params">(String userId)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getFromDB(userId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> User <span class="title">getFromDB</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"get from DB..."</span>+userId);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User(userId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@CacheEvict</span>(value = <span class="string">"users"</span>,beforeInvocation = <span class="keyword">true</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeUser</span><span class="params">(String id)</span></span>&#123;</span><br><span class="line">        removeFromDB(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeFromDB</span><span class="params">(String userId)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"removed from DB"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"spring-config.xml"</span>);</span><br><span class="line">        Foo foo = applicationContext.getBean(Foo.class);</span><br><span class="line">        System.out.println(foo.list);</span><br><span class="line">        System.out.println(foo.getList());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">first</span><br><span class="line">get from DB...<span class="number">100</span></span><br><span class="line"><span class="number">100</span>added</span><br><span class="line">second</span><br><span class="line"><span class="number">100</span>removed</span><br><span class="line">removed from DB</span><br><span class="line">third</span><br><span class="line">get from DB...<span class="number">100</span></span><br><span class="line"><span class="number">100</span>added</span><br><span class="line">fourth</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/04/23/dairy/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/06/30/learn-html01/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

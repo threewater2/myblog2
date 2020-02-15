@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Spring 中 AOP 的配置 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="AOP是基于动态代理技术来实现的，动态代理，动态代理技术一般有两种，一种是JDK的，一种是cglib的，JDK是通过代理类实现接口，然后持有原始类的引用实现的。cglib是继承原始类实现的。Spring都支持这两种，自己也可以指定使用哪种代理方式。 手动使用 Spring 的 ProxyFactory 。这个类可以为任何类生成代理，还可以添加增强和切面。 123456789101112131415">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 中 AOP 的配置">
+<meta property="og:url" content="https://threewater.xyz/2019/04/08/aop-config/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="AOP是基于动态代理技术来实现的，动态代理，动态代理技术一般有两种，一种是JDK的，一种是cglib的，JDK是通过代理类实现接口，然后持有原始类的引用实现的。cglib是继承原始类实现的。Spring都支持这两种，自己也可以指定使用哪种代理方式。 手动使用 Spring 的 ProxyFactory 。这个类可以为任何类生成代理，还可以添加增强和切面。 123456789101112131415">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-08T11:51:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring 中 AOP 的配置">
+<meta name="twitter:description" content="AOP是基于动态代理技术来实现的，动态代理，动态代理技术一般有两种，一种是JDK的，一种是cglib的，JDK是通过代理类实现接口，然后持有原始类的引用实现的。cglib是继承原始类实现的。Spring都支持这两种，自己也可以指定使用哪种代理方式。 手动使用 Spring 的 ProxyFactory 。这个类可以为任何类生成代理，还可以添加增强和切面。 123456789101112131415">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#手动使用-Spring-的-ProxyFactory-。"><span class="toc-text">手动使用 Spring 的 ProxyFactory 。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置方式使用ProxyFactory"><span class="toc-text">配置方式使用ProxyFactory</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前置增强"><span class="toc-text">前置增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后置增强"><span class="toc-text">后置增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环绕增强"><span class="toc-text">环绕增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常增强"><span class="toc-text">异常增强</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#切面"><span class="toc-text">切面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#切面是结合切点，方位，增强逻辑的。"><span class="toc-text">切面是结合切点，方位，增强逻辑的。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#静态正则表达式切面"><span class="toc-text">静态正则表达式切面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态切面"><span class="toc-text">动态切面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程切面"><span class="toc-text">流程切面</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#不使用ProxyFacotry的自动配置"><span class="toc-text">不使用ProxyFacotry的自动配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#他会自动根据容器中Advisor的bean来对原始bean进行增强"><span class="toc-text">他会自动根据容器中Advisor的bean来对原始bean进行增强</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-aop-config" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Spring 中 AOP 的配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.04.08</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>AOP是基于动态代理技术来实现的，动态代理，动态代理技术一般有两种，一种是JDK的，一种是cglib的，JDK是通过代理类实现接口，然后持有原始类的引用实现的。cglib是继承原始类实现的。Spring都支持这两种，自己也可以指定使用哪种代理方式。</p>
+<h1 id="手动使用-Spring-的-ProxyFactory-。"><a href="#手动使用-Spring-的-ProxyFactory-。" class="headerlink" title="手动使用 Spring 的 ProxyFactory 。"></a>手动使用 Spring 的 ProxyFactory 。</h1><p>这个类可以为任何类生成代理，还可以添加增强和切面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个类包含了方位和切点信息</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreetingBeforeAdvice</span> <span class="keyword">implements</span> <span class="title">MethodBeforeAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">(Method method, Object[] objects, Object o)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"How are you Mr."</span>+objects[<span class="number">0</span>]+<span class="string">"."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Waiter target=<span class="keyword">new</span> NaiveWaiter();</span><br><span class="line">        BeforeAdvice beforeAdvice=<span class="keyword">new</span> GreetingBeforeAdvice();</span><br><span class="line">        ProxyFactory factory = <span class="keyword">new</span> ProxyFactory();</span><br><span class="line">        factory.setTarget(target);</span><br><span class="line">        factory.addAdvice(beforeAdvice);</span><br><span class="line">        Waiter waiter=(Waiter)factory.getProxy();</span><br><span class="line">        waiter.greetTo(<span class="string">"me"</span>);</span><br><span class="line">        waiter.serveTo(<span class="string">"me"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">greetTo</span><span class="params">(String name)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">serveTo</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NaiveWaiter</span> <span class="keyword">implements</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">greetTo</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"greet to "</span>+name+<span class="string">"..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serveTo</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"serving "</span>+name+<span class="string">"..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置方式使用ProxyFactory"><a href="#配置方式使用ProxyFactory" class="headerlink" title="配置方式使用ProxyFactory"></a>配置方式使用ProxyFactory</h1><h2 id="前置增强"><a href="#前置增强" class="headerlink" title="前置增强"></a>前置增强</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"target"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyInterfaces</span>=<span class="string">"com.threewater.aopconfig.Waiter"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"greetAdvice"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"target"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上由于我们指定了 proxyInterfaces 所以Spring会使用JDK代理，我们可以这样设置，使它使用cglib。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"target"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"greetAdvice"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"target"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="后置增强"><a href="#后置增强" class="headerlink" title="后置增强"></a>后置增强</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreetingAfterAdvice</span> <span class="keyword">implements</span> <span class="title">AfterReturningAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterReturning</span><span class="params">(Object o, Method method, Object[] objects, Object o1)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"please enjoy yourself"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetBeforeAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetAfterAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingAfterAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"target"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"greetBeforeAdvice,greetAfterAdvice"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"target"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="环绕增强"><a href="#环绕增强" class="headerlink" title="环绕增强"></a>环绕增强</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MethodInterceptor是AOP联盟的</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreetingInterceptor</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(MethodInvocation methodInvocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        Object[] arguments = methodInvocation.getArguments();</span><br><span class="line">        System.out.println(<span class="string">"How are you Mr. "</span>+arguments[<span class="number">0</span>]+<span class="string">"."</span>);</span><br><span class="line">        Object o = methodInvocation.proceed();</span><br><span class="line">        System.out.println(<span class="string">"Please enjoy yourself"</span>);</span><br><span class="line">        <span class="keyword">return</span> o;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetInterceptor"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingInterceptor"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"target"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"greetInterceptor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"target"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="异常增强"><a href="#异常增强" class="headerlink" title="异常增强"></a>异常增强</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransactionManager</span> <span class="keyword">implements</span> <span class="title">ThrowsAdvice</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterThrowing</span><span class="params">(Method method, Object[] args, Object target, Exception ex)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"method: "</span>+method.getName());</span><br><span class="line">        System.out.println(<span class="string">"msg: "</span>+ex.getMessage());</span><br><span class="line">        System.out.println(<span class="string">"回滚事务"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForumService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeForum</span><span class="params">(<span class="keyword">int</span> forumId)</span></span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"runtime exp"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addForum</span><span class="params">(Forum forum)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> SQLException(<span class="string">"database exp"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">    ApplicationContext context=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"spring-config.xml"</span>);</span><br><span class="line">    ForumService forumService=context.getBean(<span class="string">"forumService"</span>,ForumService.class);</span><br><span class="line">    forumService.removeForum(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//不明白，为什么抛出异常之后程序终止了运行。</span></span><br><span class="line">    forumService.addForum(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"forumServiceTarget"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.ForumService"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"forumService"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"transactionManager"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"forumServiceTarget"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="切面"><a href="#切面" class="headerlink" title="切面"></a>切面</h1><h3 id="切面是结合切点，方位，增强逻辑的。"><a href="#切面是结合切点，方位，增强逻辑的。" class="headerlink" title="切面是结合切点，方位，增强逻辑的。"></a>切面是结合切点，方位，增强逻辑的。</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreetingAdvisor</span> <span class="keyword">extends</span> <span class="title">StaticMethodMatcherPointcutAdvisor</span> </span>&#123;</span><br><span class="line">    <span class="comment">//切点匹配逻辑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Method method, Class&lt;?&gt; targetClass)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Waiter类或者是其子类</span></span><br><span class="line">        <span class="keyword">return</span> method.getName().equals(<span class="string">"greetTo"</span>)&amp;&amp;Waiter.class.isAssignableFrom(targetClass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--环绕增强，包含了增强逻辑以及方位信息--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetInterceptor"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingInterceptor"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--切点添加增强--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetingAdvisor"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.advisor.GreetingAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:advice-ref</span>=<span class="string">"greetInterceptor"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiterTarget"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"parent"</span> <span class="attr">abstract</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"greetingAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">parent</span>=<span class="string">"parent"</span> <span class="attr">p:target-ref</span>=<span class="string">"waiterTarget"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="静态正则表达式切面"><a href="#静态正则表达式切面" class="headerlink" title="静态正则表达式切面"></a>静态正则表达式切面</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"regexAdvisor"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.RegexpMethodPointcutAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:advice-ref</span>=<span class="string">"greetInterceptor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:patterns</span>=<span class="string">".*greet.*"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter1"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"regexAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"waiterTarget"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="动态切面"><a href="#动态切面" class="headerlink" title="动态切面"></a>动态切面</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dynamicAdvisor"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.DefaultPointcutAdvisor"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"pointcut"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--内部bean--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.advisor.GreetingDynamicPointcut"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"advice"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"dynamicAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"waiterTarget"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GreetingDynamicPointcut</span> <span class="keyword">extends</span> <span class="title">DynamicMethodMatcherPointcut</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Method method, Class&lt;?&gt; targetClass)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//静态检查效率高，先是使用静态检查，过滤叫不匹配的类。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"greetTo"</span>.equals(method.getName())</span><br><span class="line">                &amp;&amp; Waiter.class.isAssignableFrom(targetClass);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//动态切点和静态切点没什么特别之处，只是多了个入参而已</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Method method, Class&lt;?&gt; targetClass, Object... args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//再使用动态检查</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"water"</span>.equals(args[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="流程切面"><a href="#流程切面" class="headerlink" title="流程切面"></a>流程切面</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaiterDelegate</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Waiter waiter;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(String clientName)</span></span>&#123;</span><br><span class="line">        <span class="comment">//被增强</span></span><br><span class="line">        waiter.greetTo(clientName);</span><br><span class="line">        <span class="comment">//被增强</span></span><br><span class="line">        waiter.serveTo(clientName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWaiter</span><span class="params">(Waiter waiter)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.waiter = waiter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">     	Waiter waiter = context.getBean(<span class="string">"waiter"</span>, Waiter.class);</span><br><span class="line">        waiter.greetTo(<span class="string">"water"</span>);<span class="comment">//没有被增强</span></span><br><span class="line">        waiter.serveTo(<span class="string">"water"</span>);<span class="comment">//没有被增强</span></span><br><span class="line">        WaiterDelegate waiterDelegate = <span class="keyword">new</span> WaiterDelegate();</span><br><span class="line">        waiterDelegate.setWaiter(waiter);</span><br><span class="line">        waiterDelegate.service(<span class="string">"water"</span>);   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetBeforeAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiterTarget"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--WaiterDelegate下的service方法里面调用的方法被增强--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"controlFlowPointcut"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.ControlFlowPointcut"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.Class"</span> <span class="attr">value</span>=<span class="string">"com.threewater.aopconfig.advisor.WaiterDelegate"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.String"</span> <span class="attr">value</span>=<span class="string">"service"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"controlFlowAdvisor"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.DefaultPointcutAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:pointcut-ref</span>=<span class="string">"controlFlowPointcut"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:advice-ref</span>=<span class="string">"greetBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiter"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:interceptorNames</span>=<span class="string">"controlFlowAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:target-ref</span>=<span class="string">"waiterTarget"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:proxyTargetClass</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="不使用ProxyFacotry的自动配置"><a href="#不使用ProxyFacotry的自动配置" class="headerlink" title="不使用ProxyFacotry的自动配置"></a>不使用ProxyFacotry的自动配置</h1><h3 id="他会自动根据容器中Advisor的bean来对原始bean进行增强"><a href="#他会自动根据容器中Advisor的bean来对原始bean进行增强" class="headerlink" title="他会自动根据容器中Advisor的bean来对原始bean进行增强"></a>他会自动根据容器中Advisor的bean来对原始bean进行增强</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"greetBeforeAdvice"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.GreetingBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"waiterTarget"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--WaiterDelegate下的service方法里面调用的方法被增强--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"controlFlowPointcut"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.ControlFlowPointcut"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.Class"</span> <span class="attr">value</span>=<span class="string">"com.threewater.aopconfig.advisor.WaiterDelegate"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.String"</span> <span class="attr">value</span>=<span class="string">"service"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"controlFlowAdvisor"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.support.DefaultPointcutAdvisor"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:pointcut-ref</span>=<span class="string">"controlFlowPointcut"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">p:advice-ref</span>=<span class="string">"greetBeforeAdvice"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用了自动代理，直接获取原bean就行</span></span><br><span class="line">Waiter waiter = context.getBean(<span class="string">"waiterTarget"</span>, Waiter.class);</span><br><span class="line">waiter.greetTo(<span class="string">"water"</span>);</span><br><span class="line">waiter.serveTo(<span class="string">"water"</span>);</span><br><span class="line">WaiterDelegate waiterDelegate = <span class="keyword">new</span> WaiterDelegate();</span><br><span class="line">waiterDelegate.setWaiter(waiter);</span><br><span class="line">waiterDelegate.service(<span class="string">"water"</span>);</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/04/02/first-android/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/04/08/facade/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

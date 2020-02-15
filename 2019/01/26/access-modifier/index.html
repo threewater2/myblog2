@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Java访问修饰符 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="对于类，只有两种public default. public所有类都可以使用该类。 default只有同一包下的类才可以使用该类。  对于成员(成员方法，成员变量)，有public，protected，default，private。 public就不多说了 protected,同一包类可以访问，不同包类其它类不能访问，子孙类也只可以访问其静态成员 default 同一包下随便访问，不同包下不能访">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java访问修饰符">
+<meta property="og:url" content="https://threewater.xyz/2019/01/26/access-modifier/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="对于类，只有两种public default. public所有类都可以使用该类。 default只有同一包下的类才可以使用该类。  对于成员(成员方法，成员变量)，有public，protected，default，private。 public就不多说了 protected,同一包类可以访问，不同包类其它类不能访问，子孙类也只可以访问其静态成员 default 同一包下随便访问，不同包下不能访">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-26T04:34:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java访问修饰符">
+<meta name="twitter:description" content="对于类，只有两种public default. public所有类都可以使用该类。 default只有同一包下的类才可以使用该类。  对于成员(成员方法，成员变量)，有public，protected，default，private。 public就不多说了 protected,同一包类可以访问，不同包类其它类不能访问，子孙类也只可以访问其静态成员 default 同一包下随便访问，不同包下不能访">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对于类，只有两种public-default"><span class="toc-text">对于类，只有两种public default.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对于成员-成员方法，成员变量-，有public，protected，default，private。"><span class="toc-text">对于成员(成员方法，成员变量)，有public，protected，default，private。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#访问修饰符与继承体系"><span class="toc-text">访问修饰符与继承体系</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对于类"><span class="toc-text">对于类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对于成员"><span class="toc-text">对于成员</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对于类-1"><span class="toc-text">对于类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对于成员-1"><span class="toc-text">对于成员</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#也可以总结为如下图表"><span class="toc-text">也可以总结为如下图表</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-access-modifier" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Java访问修饰符</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.01.26</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="对于类，只有两种public-default"><a href="#对于类，只有两种public-default" class="headerlink" title="对于类，只有两种public default."></a>对于类，只有两种public default.</h1><ol>
+<li>public所有类都可以使用该类。</li>
+<li>default只有同一包下的类才可以使用该类。</li>
+</ol>
+<h1 id="对于成员-成员方法，成员变量-，有public，protected，default，private。"><a href="#对于成员-成员方法，成员变量-，有public，protected，default，private。" class="headerlink" title="对于成员(成员方法，成员变量)，有public，protected，default，private。"></a>对于成员(成员方法，成员变量)，有public，protected，default，private。</h1><ol>
+<li>public就不多说了</li>
+<li>protected,同一包类可以访问，不同包类其它类不能访问，子孙类也只可以访问其静态成员</li>
+<li>default 同一包下随便访问，不同包下不能访问。子类也不行。</li>
+<li>private，只有当前类可用。</li>
+</ol>
+<h1 id="访问修饰符与继承体系"><a href="#访问修饰符与继承体系" class="headerlink" title="访问修饰符与继承体系"></a>访问修饰符与继承体系</h1><h2 id="对于类"><a href="#对于类" class="headerlink" title="对于类"></a>对于类</h2><p>父类为public随便继承，父类为default，那么只有在同一包中才能继承继承了。</p>
+<h2 id="对于成员"><a href="#对于成员" class="headerlink" title="对于成员"></a>对于成员</h2><ol>
+<li>public修饰的成员，子类都会继承。</li>
+<li>protected修饰的成员。无论是静态还是动态，都会继承。</li>
+<li>default成员。同一包下子类随便继承，不同包下，子类不能继承。</li>
+<li>private 成员，只属于父类私有，不会传递给下一级。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="对于类-1"><a href="#对于类-1" class="headerlink" title="对于类"></a>对于类</h2><ol>
+<li>对于类无论是继承，还是不继承。public可以访问，default同一包下可以访问。</li>
+</ol>
+<h2 id="对于成员-1"><a href="#对于成员-1" class="headerlink" title="对于成员"></a>对于成员</h2><ol>
+<li>public成员：既能被继承也能被访问，没有限制</li>
+<li>protected成员：<br>   同一包下：<br>   既能被继承也能被访问<br>   <span id="1"></span><br>   <strong>不同包下(<a href="#1">Y/N</a>的情况)：<br>   1.普通类不能访问也不能继承<br>   2.子类可以访问protect静态成员，继承所有protect成员</strong></li>
+<li>default成员：同一包下可以被继承可以被访问，不同包下不能访问也不能继承。</li>
+<li>private成员：不管属于哪个包，都不能被继承，也不能被访问，只有本类可以用。</li>
+</ol>
+<h2 id="也可以总结为如下图表"><a href="#也可以总结为如下图表" class="headerlink" title="也可以总结为如下图表"></a>也可以总结为如下图表</h2><table>
+<thead>
+<tr>
+<th align="center">访问权限</th>
+<th align="center">当前类</th>
+<th align="center">同一包</th>
+<th align="center">不同包</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public(类)</td>
+<td align="center">Y</td>
+<td align="center">Y</td>
+<td align="center">Y</td>
+</tr>
+<tr>
+<td align="center">protected</td>
+<td align="center">Y</td>
+<td align="center">Y</td>
+<td align="center"><a href="#1">Y/N</a></td>
+</tr>
+<tr>
+<td align="center">default(类)</td>
+<td align="center">Y</td>
+<td align="center">Y</td>
+<td align="center">N</td>
+</tr>
+<tr>
+<td align="center">private</td>
+<td align="center">N</td>
+<td align="center">N</td>
+<td align="center">N</td>
+</tr>
+</tbody></table>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/01/24/messy-code/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/02/extends-problem/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

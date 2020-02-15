@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>ClassLoader基础 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="一般一个程序有三个ClassLoader，他们分别分别管理自己的Class对象，而且他们大致呈父子关系，这种父子关系不是继承关系，是指，如果要加载类，先交给父类加载，如果父类加载不了，再由子类加载。当然我们也可以自定义加载器。我们来看一下结构。   日常用的类是由Boostrap加载的，扩展类库有Extension加载，Application加载我们自己写的类，以上三个类加载器我们是不能new的。">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ClassLoader基础">
+<meta property="og:url" content="https://threewater.xyz/2019/03/15/ClassLoader/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="一般一个程序有三个ClassLoader，他们分别分别管理自己的Class对象，而且他们大致呈父子关系，这种父子关系不是继承关系，是指，如果要加载类，先交给父类加载，如果父类加载不了，再由子类加载。当然我们也可以自定义加载器。我们来看一下结构。   日常用的类是由Boostrap加载的，扩展类库有Extension加载，Application加载我们自己写的类，以上三个类加载器我们是不能new的。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://threewater.xyz/2019/03/15/ClassLoader/classloader.svg">
+<meta property="og:updated_time" content="2019-03-15T12:25:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ClassLoader基础">
+<meta name="twitter:description" content="一般一个程序有三个ClassLoader，他们分别分别管理自己的Class对象，而且他们大致呈父子关系，这种父子关系不是继承关系，是指，如果要加载类，先交给父类加载，如果父类加载不了，再由子类加载。当然我们也可以自定义加载器。我们来看一下结构。   日常用的类是由Boostrap加载的，扩展类库有Extension加载，Application加载我们自己写的类，以上三个类加载器我们是不能new的。">
+<meta name="twitter:image" content="https://threewater.xyz/2019/03/15/ClassLoader/classloader.svg">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类查看加载自己的ClassLoader"><span class="toc-text">类查看加载自己的ClassLoader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加载不同的class对象"><span class="toc-text">加载不同的class对象</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-ClassLoader" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">ClassLoader基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.15</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>一般一个程序有三个ClassLoader，他们分别分别管理自己的Class对象，而且他们大致呈父子关系，这种父子关系不是继承关系，是指，如果要加载类，先交给父类加载，如果父类加载不了，再由子类加载。当然我们也可以自定义加载器。我们来看一下结构。</p>
+<img src="/2019/03/15/ClassLoader/classloader.svg">
+
+<p>日常用的类是由Boostrap加载的，扩展类库有Extension加载，Application加载我们自己写的类，以上三个类加载器我们是不能new的。MyClassLoader1和2是我们直接写的ClassLoader，一般我们自定义的classloader是实现<code>findClass()</code>方法，所以如果要加载类，还是会从先从父类加载。</p>
+<p>类加载之后变成了Class对象，那么既然是对象，就有可能创建多个实例，如果我们用MyClassLoader1的<code>loadClass()</code>加载了ClassA，他就变成了ClassA对象，那么我们想要创建另一个ClassA对象该怎么办呢？你可能会说我们重新调用<code>loadClass()</code>不久可以了吗？，这是不行的，因为他会先检查这个ClassA存不存在，而这里是存在的。如果我们创建两个ClassA对象。那么那么再创建一个MyClassLoader1或者用MyClassLoader2加载，也就是说，每个类加载器对象管理的类对象是不同的。他们互不影响。</p>
+<p>那么如果有Class的字节码改变了，我们可以创建一个新的类加载器对象来加载更改后的字节码对象。</p>
+<p>我觉得类加载器是动态代理的基础，我们可以在运行时生成代理类的字节码，只要这个字节码符合java的规范，他就可以扔给加载器加载，创建类对象，然后通过反射new出来。</p>
+<h2 id="类查看加载自己的ClassLoader"><a href="#类查看加载自己的ClassLoader" class="headerlink" title="类查看加载自己的ClassLoader"></a>类查看加载自己的ClassLoader</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ClassLoader loader=ClassLoaderDemo.class.getClassLoader();</span><br><span class="line">        <span class="keyword">while</span> (loader!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            System.out.println(loader.getClass().getName());</span><br><span class="line">            loader=loader.getParent();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(String.class.getClassLoader());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="加载不同的class对象"><a href="#加载不同的class对象" class="headerlink" title="加载不同的class对象"></a>加载不同的class对象</h2><p>那么是不是只要创建两个classLoader就可以创建两个class对象呢？不是的，尽管我们我们有两个classloader，但是他可能父类AppClassLoader加载完了，所以我们必须把class文件放到AppClassLoader找不到的地方。然后手动加载。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        MyClassLoader loader1 = <span class="keyword">new</span> MyClassLoader();</span><br><span class="line">        loader1.loadClass(<span class="string">"java.lang.String"</span>);</span><br><span class="line">        Class&lt;?&gt; Test1 = loader1.loadClass(<span class="string">"com.chapter24.Test"</span>);</span><br><span class="line">        MyClassLoader loader2=<span class="keyword">new</span> MyClassLoader();</span><br><span class="line">        Class&lt;?&gt; Test2 = loader2.loadClass(<span class="string">"com.chapter24.Test"</span>);</span><br><span class="line">        System.out.println(Test1.getClassLoader().getClass().getName());</span><br><span class="line">        System.out.println(Test2.getClassLoader().getClass().getName());</span><br><span class="line">        System.out.println(loader1==loader2);</span><br><span class="line">        System.out.println(Test1==Test2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sun.misc.Launcher$AppClassLoader</span><br><span class="line">sun.misc.Launcher$AppClassLoader</span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+
+<p>果然，他被父类加载了。</p>
+<p>如果想要父类不加载，那么就要让父类找不到。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String BASE_DIR=<span class="string">"C:/Users/water/IdeaProjects/the logic of java programming/target/classes/"</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name)&#123;</span><br><span class="line">        name=name+<span class="string">".chapter24.Test"</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = getClassByte();</span><br><span class="line">        <span class="keyword">return</span> defineClass(name,bytes,<span class="number">0</span>,bytes.length);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        String property = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">        System.out.println(property);</span><br><span class="line">        MyClassLoader loader1 = <span class="keyword">new</span> MyClassLoader();</span><br><span class="line">        <span class="comment">//让父类找不到</span></span><br><span class="line">        Class&lt;?&gt; Test1 = loader1.loadClass(<span class="string">"com"</span>);</span><br><span class="line">        MyClassLoader loader2=<span class="keyword">new</span> MyClassLoader();</span><br><span class="line">        Class&lt;?&gt; Test2 = loader2.loadClass(<span class="string">"com"</span>);</span><br><span class="line">        System.out.println(Test1.getClassLoader().getClass().getName());</span><br><span class="line">        System.out.println(Test2.getClassLoader().getClass().getName());</span><br><span class="line">        System.out.println(loader1==loader2);</span><br><span class="line">        System.out.println(Test1==Test2);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] getClassByte()&#123;</span><br><span class="line">        String filename=BASE_DIR+<span class="string">"com/chapter24/Test.class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            FileInputStream fin = <span class="keyword">new</span> FileInputStream(filename);</span><br><span class="line">            ByteArrayOutputStream bout = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">byte</span>[] tmp=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">int</span> r;</span><br><span class="line">            <span class="keyword">while</span> ((r=fin.read(tmp))!=-<span class="number">1</span>)&#123;</span><br><span class="line">                bout.write(tmp,<span class="number">0</span>,r);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> bout.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.chapter24.MyClassLoader</span><br><span class="line">com.chapter24.MyClassLoader</span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/15/strategy/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/17/install-jdk8/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

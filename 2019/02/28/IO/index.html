@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Java文件基础 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="Java中操作文件大致可以分为两个流派字节流，字符流。 字节流Inputstream/Outputstream  抽象类，提供编程接口，具体方法由子类高效实现。 FileInputStream/FileOutputStream 从文件中读取或者写入文件。调用写入方法后，只是把数据交给你的操作系统。具体什么时候存到硬盘，有你的操作系统决定。如果要确保数据保存到磁盘上，要调用本地方法。 1output">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java文件基础">
+<meta property="og:url" content="https://threewater.xyz/2019/02/28/IO/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="Java中操作文件大致可以分为两个流派字节流，字符流。 字节流Inputstream/Outputstream  抽象类，提供编程接口，具体方法由子类高效实现。 FileInputStream/FileOutputStream 从文件中读取或者写入文件。调用写入方法后，只是把数据交给你的操作系统。具体什么时候存到硬盘，有你的操作系统决定。如果要确保数据保存到磁盘上，要调用本地方法。 1output">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-28T11:46:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java文件基础">
+<meta name="twitter:description" content="Java中操作文件大致可以分为两个流派字节流，字符流。 字节流Inputstream/Outputstream  抽象类，提供编程接口，具体方法由子类高效实现。 FileInputStream/FileOutputStream 从文件中读取或者写入文件。调用写入方法后，只是把数据交给你的操作系统。具体什么时候存到硬盘，有你的操作系统决定。如果要确保数据保存到磁盘上，要调用本地方法。 1output">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#字节流"><span class="toc-text">字节流</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于字节流的一些实用方法"><span class="toc-text">关于字节流的一些实用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符流"><span class="toc-text">字符流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#标准流"><span class="toc-text">标准流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件"><span class="toc-text">文件</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-IO" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Java文件基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.28</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>Java中操作文件大致可以分为两个流派<code>字节流</code>，<code>字符流</code>。</p>
+<h1 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h1><p>Inputstream/Outputstream </p>
+<p>抽象类，提供编程接口，具体方法由子类高效实现。</p>
+<p>FileInputStream/FileOutputStream</p>
+<p>从文件中读取或者写入文件。调用写入方法后，只是把数据交给你的操作系统。具体什么时候存到硬盘，有你的操作系统决定。如果要确保数据保存到磁盘上，要调用本地方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">output.getFD().sync();</span><br></pre></td></tr></table></figure>
+
+<p>ByteArrayInputStream/ByteArrayOutputStream</p>
+<p>把字节数组转换为流这样我们就可像流一样读取字节数组。把输出流转换为字节数组，通过他的toByteArray()方法返回字节数组。这两个类把字节数组加入了流的体系中，而不是仅仅局限于文件。</p>
+<p>BufferedInputStream/BufferedOnputStream</p>
+<p>装饰类，用来装饰流，为流提供缓冲功能。他有一个缓冲区，对于BufferedOnputStream来说。可以调用flush()方法把缓冲区中的文件刷入它装饰的流中。只有对于其它流调用flush方法没有任何效果。一般用FileOutputStream应该套一个这个。</p>
+<p>DataIutputStream/DataOutputStream</p>
+<p>以上都只能操作字节，这两个类可以操作基本类型，支持基本数据类型的写入以及读取。构造方法接受一个已有的流。</p>
+<h2 id="关于字节流的一些实用方法"><a href="#关于字节流的一些实用方法" class="headerlink" title="关于字节流的一些实用方法"></a>关于字节流的一些实用方法</h2><ol>
+<li><p>复制输入流的数据到输入流。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">copy</span><span class="params">(InputStream in,OutputStream out)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    <span class="keyword">byte</span>[] bytes=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">int</span> readbtyes;</span><br><span class="line">    <span class="keyword">while</span> ((readbtyes=in.read(bytes))!=-<span class="number">1</span>)&#123;</span><br><span class="line">        out.write(bytes,<span class="number">0</span>,readbtyes);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>将文件存入字节数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] storeFile2BytesArray(String fileName) <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">    BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(fileName));</span><br><span class="line">    ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">    copy(in,out);</span><br><span class="line">    <span class="keyword">return</span> out.toByteArray();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将字节数组写入文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">storeBytesArray2File</span><span class="params">(String fileName,<span class="keyword">byte</span>[] bytes)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    FileOutputStream out = <span class="keyword">new</span> FileOutputStream(fileName);</span><br><span class="line">    out.write(bytes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h1><p>字符更适合操作文本文件。因为字符可能是一个字节，也可能是多个字节。所以字符流的基本操作单位是<code>char</code>。</p>
+<p>Reader/Writer 抽象类，提供变成接口。关键read/write方法交给子类实现。</p>
+<p>InputStreamReader/OnputStreamWriter。将字节流转换为字符流继承自Reader/Writer。构造函数接收字节流。</p>
+<p>FileReader/FileWriter 从文件中读取/写入文件。</p>
+<p>CharArrayReader/CharArrayWriter 把字符数组转换为Reader流/把流转换为字符数组。</p>
+<p>StringReader/StringWriter 把字符串转换为Reader流/把流转换为字符串。</p>
+<p>BufferedInputStream/BufferednputStream 装饰类，缓冲流，可以读取一行</p>
+<p>PrintWriter 没有相应的reader。构造函数参数可以为writer，outputStream，filename。可以把基本类型和对象的字符串形式 写入目的地。</p>
+<p>PrintStream 几乎与PrintWriter相同，只是构造参数不能为writer，以及同步缓冲区的时间不同。PrintStream会在遇到换行符时同步缓冲区。但是他的write(int i)只能用到前8位，也就是一个字节。</p>
+<p>Scanner 一个扫描器，可以从源解析基本类型以及字符串，其中useDelimiter可以自定义分隔符，默认分隔符为一个空格。</p>
+<h1 id="标准流"><a href="#标准流" class="headerlink" title="标准流"></a>标准流</h1><p>标准流是指System旗下的<code>System.in</code>，<code>c</code>，<code>System.err</code>。</p>
+<p>System.in 是inputStream类型的。默认输入源是键盘。</p>
+<p>System.out默认输出源是屏幕。</p>
+<p>System.err 标准错误流，java所有的错误信息都会输出到这个流。</p>
+<p>标准流有一个特点，它可以重定向。我们把它定向到一个文件或者网络。</p>
+<p>通过<code>System.setXXX</code>进行重定向。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.setOut(<span class="keyword">new</span> PrintStream(path));</span><br><span class="line">System.out.println(<span class="string">"wo"</span>);<span class="comment">//会输出到path中</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h1><p>File 既可以表示文件也可以表示目录。</p>
+<p>新建一个File对象不会创建文件，但是<code>createNewFile()</code>方法会在磁盘中创建文件，如果文件已存在，则不会创建。</p>
+<p><code>delete()</code>会删除文件或者目录(空目录)。</p>
+<p>如果File表示目录，那么<code>mkdir</code>可以创建目录，同样如果目录存在，则不会创建。</p>
+<p><code>listFiles()</code>可以列出该目录下所有文件或者目录。他有一个重载方法<code>listFiles(FilenameFilter filter)</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//找java文件</span></span><br><span class="line">File[] files = file.listFiles(<span class="keyword">new</span> FilenameFilter() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">//dir表示当前遍历到的文件或者目录，name表示文件名或者目录名。</span></span><br><span class="line">    <span class="comment">//返回true表示可以加入结果集</span></span><br><span class="line">    <span class="comment">//返回false不会加入结果集</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">accept</span><span class="params">(File dir, String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (name.endsWith(<span class="string">".java"</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/27/factory/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/28/builder/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

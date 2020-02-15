@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>随机数的应用 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="随机数产生的原理要产生随机数我们需要一个种子，作为构造参数传入。在Random类中，有两个构造方法。 12345678910111213141. 系统生成真正的随机种子。public Random() &amp;#123;    this(seedUniquifier() ^ System.nanoTime());&amp;#125;2. 由我们指定种子。public Random(long seed) &amp;#12">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机数的应用">
+<meta property="og:url" content="https://threewater.xyz/2019/02/12/random/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="随机数产生的原理要产生随机数我们需要一个种子，作为构造参数传入。在Random类中，有两个构造方法。 12345678910111213141. 系统生成真正的随机种子。public Random() &amp;#123;    this(seedUniquifier() ^ System.nanoTime());&amp;#125;2. 由我们指定种子。public Random(long seed) &amp;#12">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-12T07:26:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="随机数的应用">
+<meta name="twitter:description" content="随机数产生的原理要产生随机数我们需要一个种子，作为构造参数传入。在Random类中，有两个构造方法。 12345678910111213141. 系统生成真正的随机种子。public Random() &amp;#123;    this(seedUniquifier() ^ System.nanoTime());&amp;#125;2. 由我们指定种子。public Random(long seed) &amp;#12">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#随机数产生的原理"><span class="toc-text">随机数产生的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机密码生成器"><span class="toc-text">随机密码生成器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#带权重的随机选择"><span class="toc-text">带权重的随机选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#抢红包"><span class="toc-text">抢红包</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-random" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">随机数的应用</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="随机数产生的原理"><a href="#随机数产生的原理" class="headerlink" title="随机数产生的原理"></a>随机数产生的原理</h2><p>要产生随机数我们需要一个种子，作为构造参数传入。<br>在Random类中，有两个构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 系统生成真正的随机种子。</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Random</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(seedUniquifier() ^ System.nanoTime());</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">2</span>. 由我们指定种子。</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Random</span><span class="params">(<span class="keyword">long</span> seed)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (getClass() == Random.class)</span><br><span class="line">		<span class="keyword">this</span>.seed = <span class="keyword">new</span> AtomicLong(initialScramble(seed));</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// subclass might have overriden setSeed</span></span><br><span class="line">        <span class="keyword">this</span>.seed = <span class="keyword">new</span> AtomicLong();</span><br><span class="line">        setSeed(seed);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>种子一旦确定，后面产生的随机数也就确定了。</p>
+<h2 id="随机密码生成器"><a href="#随机密码生成器" class="headerlink" title="随机密码生成器"></a>随机密码生成器</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomPassword</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Random rnd=<span class="keyword">new</span> Random();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPECIAL_CHAR=<span class="string">"!@#$%^&amp;*()_+-="</span>;</span><br><span class="line">    <span class="comment">//生成一个随机位置</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getRandomIndex</span><span class="params">(<span class="keyword">char</span>[] a, Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> index = rnd.nextInt(a.length);</span><br><span class="line">        <span class="keyword">while</span> (a[index]!=<span class="number">0</span>)&#123;</span><br><span class="line">            index=rnd.nextInt(a.length);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> index;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成一个随机特殊字符</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> <span class="title">specialChar</span><span class="params">(Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SPECIAL_CHAR.charAt(rnd.nextInt(SPECIAL_CHAR.length()));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成一个随机数字</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> <span class="title">numLetter</span><span class="params">(Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">char</span>) (<span class="string">'0'</span>+rnd.nextInt(<span class="number">10</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成一个随机小写字母</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> <span class="title">lowerLetter</span><span class="params">(Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">char</span>)(<span class="string">'a'</span>+rnd.nextInt(<span class="number">26</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成一个随机大写字母</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> <span class="title">upperLetter</span><span class="params">(Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">char</span>)(<span class="string">'A'</span>+rnd.nextInt(<span class="number">26</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成一个随机字符</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> <span class="title">nextChar</span><span class="params">(Random rnd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (rnd.nextInt(<span class="number">4</span>))&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">return</span> (<span class="keyword">char</span>) (<span class="string">'0'</span>+rnd.nextInt(<span class="number">10</span>));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> (<span class="keyword">char</span>)(<span class="string">'a'</span>+rnd.nextInt(<span class="number">26</span>));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">return</span> (<span class="keyword">char</span>)(<span class="string">'A'</span>+rnd.nextInt(<span class="number">26</span>));</span><br><span class="line">            <span class="keyword">default</span>: <span class="keyword">return</span> SPECIAL_CHAR.charAt(rnd.nextInt(SPECIAL_CHAR.length()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//生成随机密码</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">randomPassword</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">char</span>[] chars=<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">8</span>];</span><br><span class="line">        chars[getRandomIndex(chars, rnd)]=specialChar(rnd);</span><br><span class="line">        chars[getRandomIndex(chars, rnd)]=numLetter(rnd);</span><br><span class="line">        chars[getRandomIndex(chars, rnd)]=lowerLetter(rnd);</span><br><span class="line">        chars[getRandomIndex(chars, rnd)]=upperLetter(rnd);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;chars.length;i++)</span><br><span class="line">            <span class="keyword">if</span>(chars[i]==<span class="number">0</span>)</span><br><span class="line">                chars[i]=nextChar(rnd);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(chars);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String s = randomPassword();</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="带权重的随机选择"><a href="#带权重的随机选择" class="headerlink" title="带权重的随机选择"></a>带权重的随机选择</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightRandom</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Pair[] pairs;</span><br><span class="line">    <span class="comment">//累计概率</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span>[] cumulativeProbabilities;</span><br><span class="line">    <span class="keyword">private</span> Random rnd;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeightRandom</span><span class="params">(Pair[] pairs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pairs = pairs;</span><br><span class="line">        rnd=<span class="keyword">new</span> Random();</span><br><span class="line">        prepare();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//累计概率赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">()</span></span>&#123;</span><br><span class="line">        cumulativeProbabilities=<span class="keyword">new</span> <span class="keyword">double</span>[pairs.length];</span><br><span class="line">        <span class="keyword">int</span> totalWeight=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(Pair pair:pairs)&#123;</span><br><span class="line">            totalWeight+=pair.getWeight();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;pairs.length;i++)&#123;</span><br><span class="line">            sum+=pairs[i].getWeight();</span><br><span class="line">            cumulativeProbabilities[i]=(<span class="keyword">double</span>) sum/totalWeight;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//随机选出一个item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">nextItem</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">double</span> randomValue=rnd.nextDouble();</span><br><span class="line">        <span class="keyword">int</span> index = Arrays.binarySearch(cumulativeProbabilities, randomValue);</span><br><span class="line">        <span class="keyword">if</span>(index&lt;<span class="number">0</span>)&#123;<span class="comment">//没有找到</span></span><br><span class="line">            index=-index-<span class="number">1</span>;<span class="comment">//详情请看Arrays.binarySearch源码</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pairs[index].getItem();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Pair[] pairs=<span class="keyword">new</span> Pair[]&#123;<span class="keyword">new</span> Pair(<span class="string">"1元"</span>,<span class="number">7</span>),</span><br><span class="line">                                <span class="keyword">new</span> Pair(<span class="string">"5元"</span>,<span class="number">2</span>),</span><br><span class="line">                                <span class="keyword">new</span> Pair(<span class="string">"10元"</span>,<span class="number">1</span>)&#125;;</span><br><span class="line">        WeightRandom weightRandom = <span class="keyword">new</span> WeightRandom(pairs);</span><br><span class="line">        Object o = weightRandom.nextItem();</span><br><span class="line">        System.out.println(o);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Pair类用来表示一个物品，及其权重。</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pair</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object item;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> weight;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Pair</span><span class="params">(Object item, <span class="keyword">int</span> weight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item = item;</span><br><span class="line">        <span class="keyword">this</span>.weight = weight;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getItem</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getWeight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> weight;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="抢红包"><a href="#抢红包" class="headerlink" title="抢红包"></a>抢红包</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedPacket</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> leftMoney;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> leftNum;</span><br><span class="line">    <span class="keyword">private</span> Random random;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RedPacket</span><span class="params">(<span class="keyword">int</span> leftMoney, <span class="keyword">int</span> leftNum)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.leftMoney = leftMoney;</span><br><span class="line">        <span class="keyword">this</span>.leftNum = leftNum;</span><br><span class="line">        <span class="keyword">this</span>.random = <span class="keyword">new</span> Random();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">nextMoney</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(leftNum&lt;<span class="number">1</span>||leftMoney&lt;<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"抢光了"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(leftNum==<span class="number">1</span>)&#123;</span><br><span class="line">            leftNum--;</span><br><span class="line">            <span class="keyword">return</span> leftMoney;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">double</span> max=(<span class="keyword">double</span>) leftMoney/leftNum*<span class="number">2</span>d;</span><br><span class="line">        <span class="keyword">int</span> money=(<span class="keyword">int</span>)Math.max(<span class="number">1</span>,random.nextDouble()*max);</span><br><span class="line">        leftMoney-=money;</span><br><span class="line">        leftNum--;</span><br><span class="line">        <span class="keyword">return</span> money;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        RedPacket redPacket = <span class="keyword">new</span> RedPacket(<span class="number">9</span>, <span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">11</span>;i++)&#123;</span><br><span class="line">            System.out.println(redPacket.nextMoney());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/04/extends-problem2/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/13/generic/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

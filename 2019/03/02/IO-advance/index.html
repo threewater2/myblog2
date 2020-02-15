@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>IO之常用文件的处理 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="对于属性文件，HTML文件，Excel，CVS日志文件，用字节流和字符流操作将会及其不方便。通过Java的IO以及三方类库，我们很方便的操作这些文件。 属性文件属性文件，就是键值对，键和值之间用=或者:连接，一行代表一个键自对，如果情况只是这样，那么我们完全可以用Read流操作啊，直接读取一行，然后按=或者:split就行了。但是如果键或者值中含有这些特殊字符呢？这样就比较麻烦了。要使用\表示它是">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO之常用文件的处理">
+<meta property="og:url" content="https://threewater.xyz/2019/03/02/IO-advance/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="对于属性文件，HTML文件，Excel，CVS日志文件，用字节流和字符流操作将会及其不方便。通过Java的IO以及三方类库，我们很方便的操作这些文件。 属性文件属性文件，就是键值对，键和值之间用=或者:连接，一行代表一个键自对，如果情况只是这样，那么我们完全可以用Read流操作啊，直接读取一行，然后按=或者:split就行了。但是如果键或者值中含有这些特殊字符呢？这样就比较麻烦了。要使用\表示它是">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-02T07:29:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IO之常用文件的处理">
+<meta name="twitter:description" content="对于属性文件，HTML文件，Excel，CVS日志文件，用字节流和字符流操作将会及其不方便。通过Java的IO以及三方类库，我们很方便的操作这些文件。 属性文件属性文件，就是键值对，键和值之间用=或者:连接，一行代表一个键自对，如果情况只是这样，那么我们完全可以用Read流操作啊，直接读取一行，然后按=或者:split就行了。但是如果键或者值中含有这些特殊字符呢？这样就比较麻烦了。要使用\表示它是">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#属性文件"><span class="toc-text">属性文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CSV日志文件"><span class="toc-text">CSV日志文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Excel"><span class="toc-text">Excel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTML"><span class="toc-text">HTML</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#压缩文件"><span class="toc-text">压缩文件</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-IO-advance" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">IO之常用文件的处理</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.02</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>对于属性文件，HTML文件，Excel，CVS日志文件，用字节流和字符流操作将会及其不方便。通过Java的IO以及三方类库，我们很方便的操作这些文件。</p>
+<h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><p>属性文件，就是键值对，键和值之间用<code>=</code>或者<code>:</code>连接，一行代表一个键自对，如果情况只是这样，那么我们完全可以用Read流操作啊，直接读取一行，然后按<code>=</code>或者<code>:</code>split就行了。但是如果键或者值中含有这些特殊字符呢？这样就比较麻烦了。要使用<code>\</code>表示它是一个特殊字符。Java中有一个单独的类<code>java.util.Properties</code>处理<code>.properties</code>后缀的文件，这个文件不支持中文，对于非ASCII字符需要转成Unicode编码，但是一般IDE可以自动转。在Idea中需要设置一下。我们来看一下如何使用这个类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//.properties</span><br><span class="line">name=我</span><br><span class="line">password=这是\\密码\n哦</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyProperties</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String rootPath = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">        rootPath+=<span class="string">"/src/com/chapter14/config.properties"</span>;</span><br><span class="line">        Properties config = <span class="keyword">new</span> Properties();</span><br><span class="line">        config.load(<span class="keyword">new</span> FileInputStream(rootPath));</span><br><span class="line">        String name = config.getProperty(<span class="string">"name"</span>);</span><br><span class="line">        String password = config.getProperty(<span class="string">"password"</span>);</span><br><span class="line">        System.out.println(name);</span><br><span class="line">        System.out.println(password);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="CSV日志文件"><a href="#CSV日志文件" class="headerlink" title="CSV日志文件"></a>CSV日志文件</h1><p>CSV日志文件，一行表示一条记录，一行记录各个字段之间用<code>,</code>分隔。不过这个分隔符可以自己设置，同样，遇到特殊字符用<code>\</code>加在前面。它支持中文。要读<code>.csv</code>文件需要用到<code>commons-csv</code>包，接下来我们来讨论它的一些用法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyCSV</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//设置字段之间的分隔符</span></span><br><span class="line">        CSVFormat csvFormat = CSVFormat.newFormat(<span class="string">','</span>);</span><br><span class="line">        <span class="comment">//定义引号</span></span><br><span class="line">        csvFormat.withQuote(<span class="string">'"'</span>);</span><br><span class="line">        <span class="comment">//定义空字符串表示</span></span><br><span class="line">        csvFormat.withNullString(<span class="string">"N/A"</span>);</span><br><span class="line">        <span class="comment">//是否忽略字段间的空白</span></span><br><span class="line">        csvFormat.withIgnoreSurroundingSpaces(<span class="keyword">true</span>);</span><br><span class="line">        CSVFormat csvFormat2=CSVFormat.DEFAULT;</span><br><span class="line"></span><br><span class="line">        String rootPath = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">        System.out.println(rootPath);</span><br><span class="line">        rootPath+=<span class="string">"/src/main/java/com/chapter14/config2.csv"</span>;</span><br><span class="line">	    FileReader reader = <span class="keyword">new</span> FileReader(rootPath);</span><br><span class="line">        CSVParser parser = csvFormat.parse(<span class="keyword">new</span> FileReader(rootPath));</span><br><span class="line">        <span class="comment">//CSVRecord表示一条记录，他们都实现了iterable接口</span></span><br><span class="line">        <span class="keyword">for</span>(CSVRecord record:parser)&#123;</span><br><span class="line">            <span class="keyword">for</span>(String cell:record)&#123;</span><br><span class="line">                System.out.print(cell+<span class="string">","</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line">        reader.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>commons-csv</code>不但支持读取，还支持写入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">csvReader</span><span class="params">(String path)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    CSVPrinter printer = <span class="keyword">new</span> CSVPrinter(<span class="keyword">new</span> FileWriter(path),CSVFormat.DEFAULT);</span><br><span class="line">    <span class="comment">//会覆盖原文件中已有的数据</span></span><br><span class="line">    printer.printRecord(<span class="string">"山水"</span>,<span class="number">18</span>,<span class="string">"我是谁"</span>);</span><br><span class="line">    printer.printRecord(<span class="string">"她"</span>,<span class="number">19</span>,<span class="string">"她是谁"</span>);</span><br><span class="line">    printer.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Excel"><a href="#Excel" class="headerlink" title="Excel"></a>Excel</h1><p>对于Excel我们需要使用POI类库，对于<code>.xls</code>文件需要使用<code>HSSFWork</code>。对于<code>.xlsx</code>格式，需要使用<code>XSSFWork</code>类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(String path)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    Workbook workbook = WorkbookFactory.create(<span class="keyword">new</span> File(path));</span><br><span class="line">    <span class="keyword">for</span>(Sheet sheet:workbook)&#123;</span><br><span class="line">        <span class="keyword">for</span>(Row row:sheet)&#123;</span><br><span class="line">            <span class="keyword">int</span> age=(<span class="keyword">int</span>) row.getCell(<span class="number">0</span>).getNumericCellValue();</span><br><span class="line">            String name = row.getCell(<span class="number">1</span>).getStringCellValue();</span><br><span class="line">            System.out.println(name+<span class="string">" "</span>+age);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String path, List&lt;Student&gt; list)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    HSSFWorkbook workbook = <span class="keyword">new</span> HSSFWorkbook();</span><br><span class="line">    HSSFSheet sheet = workbook.createSheet();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;list.size();i++)&#123;</span><br><span class="line">        HSSFRow row = sheet.createRow(i);</span><br><span class="line">        Student student = list.get(i);</span><br><span class="line">        row.createCell(<span class="number">0</span>).setCellValue(student.getAge());</span><br><span class="line">        row.createCell(<span class="number">1</span>).setCellValue(student.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    workbook.write(<span class="keyword">new</span> File(path));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><p>对于HTML我们可以使用<code>jsoup</code>类库。它支持使用css选择器来选择元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHTML</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String url=<span class="string">"https://zouxianmiao.com/category/"</span>;</span><br><span class="line">        Document document = Jsoup.connect(url).get();</span><br><span class="line">        String cssQuery=<span class="string">".item-post a"</span>;</span><br><span class="line">        Elements elements = document.select(cssQuery);</span><br><span class="line">        <span class="keyword">for</span>(Element element:elements)&#123;</span><br><span class="line">            String text = element.text();</span><br><span class="line">            String href = element.attr(<span class="string">"href"</span>);</span><br><span class="line">            System.out.println(text+<span class="string">"  "</span>+href);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//也可以采用文件解析</span></span><br><span class="line">Jsoup.parse(<span class="string">"a.html"</span>,<span class="string">"UTF-8"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>理论上这个jsoup配合广度优先搜索就可以做爬虫了。</p>
+<h1 id="压缩文件"><a href="#压缩文件" class="headerlink" title="压缩文件"></a>压缩文件</h1><p>Java支持压缩和解压缩。支持<code>zip</code>和<code>gzip</code>。我们需要支持更多格式，可以使用<code>Apache Commons Compress</code>类库。</p>
+<p><code>GZIPOutputStream</code>用来压缩，<code>GZIPInputStream</code>用来解压缩。<code>GZIP</code>只可以压缩一个文件，而<code>ZIP</code>可以压缩多个。</p>
+<p>对于ZIP压缩来说用<code>ZipOutputStream</code>来压缩，要通过<code>putNextEntry(ZipEntry entry)</code>其中<code>ZipEntry</code>的构造参数为文件名。其中<code>ZipOutputStream</code>的构造参数为压缩后文件的绝对路径。</p>
+<p>用<code>ZipOutputStream</code>来解压缩，构造参数为压缩文件的全路径。用<code>getNextEntry()</code>来获取下一个压缩条目。没有返回<code>null</code>获取条目主要的目的是获取条目的文件名。以便于创建解压缩后的文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Gzip</span></span><br><span class="line">	<span class="comment">//压缩</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">gzip</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        InputStream in=<span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">                       <span class="keyword">new</span> FileInputStream(fileName));</span><br><span class="line">        fileName+=<span class="string">".gz"</span>;</span><br><span class="line">        OutputStream out=<span class="keyword">new</span> GZIPOutputStream(</span><br><span class="line">                         <span class="keyword">new</span> BufferedOutputStream(</span><br><span class="line">                         <span class="keyword">new</span> FileOutputStream(fileName)));</span><br><span class="line">        MyStream.copy(in,out);</span><br><span class="line">        in.close();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//解压缩</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ungzip</span><span class="params">(String gzipFileName,String ungzipFileName)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        InputStream in=<span class="keyword">new</span> GZIPInputStream(</span><br><span class="line">                       <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">                       <span class="keyword">new</span> FileInputStream(gzipFileName)));</span><br><span class="line">        OutputStream out=<span class="keyword">new</span> BufferedOutputStream(</span><br><span class="line">                         <span class="keyword">new</span> FileOutputStream(ungzipFileName));</span><br><span class="line">        MyStream.copy(in,out);</span><br><span class="line">        in.close();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//ZIP</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">zip</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String path = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">        String zipPath=path+<span class="string">"/src/main/java/com/chapter14/test.zip"</span>;</span><br><span class="line">        String rootPath=path+<span class="string">"/src/main/java/com/chapter14/"</span>;</span><br><span class="line">        File root=<span class="keyword">new</span> File(rootPath);</span><br><span class="line">        ZipOutputStream zipOutputStream = <span class="keyword">new</span> ZipOutputStream(</span><br><span class="line">                                          <span class="keyword">new</span> BufferedOutputStream(</span><br><span class="line">                                          <span class="keyword">new</span> FileOutputStream(zipPath)));</span><br><span class="line">        <span class="keyword">for</span>(File file:root.listFiles())&#123;</span><br><span class="line">            zipOutputStream.putNextEntry(<span class="keyword">new</span> ZipEntry(file.getName()));</span><br><span class="line">            BufferedInputStream inputStream = <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">                                              <span class="keyword">new</span> FileInputStream(file));</span><br><span class="line">            MyStream.copy(inputStream,zipOutputStream);</span><br><span class="line">        &#125;</span><br><span class="line">        zipOutputStream.close();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//unzip</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unzip</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String path = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line">        String zipPath=path+<span class="string">"/src/main/java/com/chapter14/test.zip"</span>;</span><br><span class="line">        String unzip=path+<span class="string">"/src/main/java/com/chapter14/unzip/"</span>;</span><br><span class="line">        ZipInputStream zipInputStream = <span class="keyword">new</span> ZipInputStream(</span><br><span class="line">                                        <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">                                        <span class="keyword">new</span> FileInputStream(zipPath)));</span><br><span class="line">        ZipEntry entry=zipInputStream.getNextEntry();</span><br><span class="line">        <span class="keyword">while</span> (entry!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            String name = entry.getName();</span><br><span class="line">            OutputStream out = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(unzip+name));</span><br><span class="line">            MyStream.copy(zipInputStream,out);</span><br><span class="line">            entry=zipInputStream.getNextEntry();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/28/builder/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/02/basicDB/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

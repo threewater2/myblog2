@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>异步执行任务基础 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="队列并发队列介绍队列就是一种先进先出的结构，当多个线程访问同一个队列时可能会出现出现问题，现在我们来看一下队列的并发版本。  无锁非阻塞并发队列：ConcurrentLinkedQueue和ConcurrentLinkedDueue内部使用链表实现，无界，使用CAS和循环保证线程安全。 普通阻塞队列：ArrayBlockingQueue，LinkedBlockingQueue，LinkedBloc">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异步执行任务基础">
+<meta property="og:url" content="https://threewater.xyz/2019/03/11/executor/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="队列并发队列介绍队列就是一种先进先出的结构，当多个线程访问同一个队列时可能会出现出现问题，现在我们来看一下队列的并发版本。  无锁非阻塞并发队列：ConcurrentLinkedQueue和ConcurrentLinkedDueue内部使用链表实现，无界，使用CAS和循环保证线程安全。 普通阻塞队列：ArrayBlockingQueue，LinkedBlockingQueue，LinkedBloc">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-12T06:52:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="异步执行任务基础">
+<meta name="twitter:description" content="队列并发队列介绍队列就是一种先进先出的结构，当多个线程访问同一个队列时可能会出现出现问题，现在我们来看一下队列的并发版本。  无锁非阻塞并发队列：ConcurrentLinkedQueue和ConcurrentLinkedDueue内部使用链表实现，无界，使用CAS和循环保证线程安全。 普通阻塞队列：ArrayBlockingQueue，LinkedBlockingQueue，LinkedBloc">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#队列"><span class="toc-text">队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发队列介绍"><span class="toc-text">并发队列介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异步任务执行服务"><span class="toc-text">异步任务执行服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单使用"><span class="toc-text">简单使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法介绍"><span class="toc-text">方法介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadPoolExecutor"><span class="toc-text">ThreadPoolExecutor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ExecutorService的一些实现类"><span class="toc-text">ExecutorService的一些实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定时任务"><span class="toc-text">定时任务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现原理"><span class="toc-text">实现原理</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-executor" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">异步执行任务基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h2><h2 id="并发队列介绍"><a href="#并发队列介绍" class="headerlink" title="并发队列介绍"></a>并发队列介绍</h2><p>队列就是一种先进先出的结构，当多个线程访问同一个队列时可能会出现出现问题，现在我们来看一下队列的并发版本。</p>
+<ol>
+<li>无锁非阻塞并发队列：<code>ConcurrentLinkedQueue</code>和<code>ConcurrentLinkedDueue</code>内部使用链表实现，无界，使用CAS和循环保证线程安全。</li>
+<li>普通阻塞队列：<code>ArrayBlockingQueue</code>，<code>LinkedBlockingQueue</code>，<code>LinkedBlockingDueue</code>。一个基于数组实现，一个基于链表实现，基于数组实现的有界，基于链表实现的默认无界，内部使用<code>ReentrantLock</code> 和显式条件保证并发安全。</li>
+<li>优先级阻塞队列：不是先进先出队列，而是按优先级进出，要么实现比较接口，要么提供比较接口。无界。也是用显式锁和显式条件保证线程安全。</li>
+<li>延时阻塞队列：<code>DelayQueue</code> 按时间进行排序，取的时候看哪个过期了就拿哪个，如果没有元素过期，那么就拿快过期的，同时拿的线程睡眠过期间隔，如果睡眠期间由于新的元素加入，那么重新计算过期时间，唤醒睡眠线程，重新拿。使用显式锁保证安全。</li>
+<li>其它阻塞队列：<code>SynchronousQueue</code>：如果操作需要等待另一个线程的出队操作，出队操作需要等待另一个线程的入队操作。<code>LinkedTransferQueue</code>：继承自<code>BlockingQueue</code>，对存取操作进行了一些优化，如果有取操作在等待，如果当另外一个线程存元素的时候，会直接给取操作的线程。</li>
+</ol>
+<h2 id="异步任务执行服务"><a href="#异步任务执行服务" class="headerlink" title="异步任务执行服务"></a>异步任务执行服务</h2><p>以前我们想要执行异步任务的时候，必须自己创建线程，以及获取异步结果的具体细节。现在JDK为我们提供了一种实现，我们执行异步任务更简单。我们来一下基本类。</p>
+<ol>
+<li>Runnable ，Callable ：表示要异步执行的任务</li>
+<li>ExecutorService：执行服务，执行具体任务，并且返回任务执行结果</li>
+<li>Future：表示执行结果</li>
+</ol>
+<h3 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">	<span class="comment">//泛型为返回结果的类型</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">myTask</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            Thread.sleep(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"my task is finished"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException </span>&#123;</span><br><span class="line">        ExecutorService executor = Executors.newSingleThreadExecutor();</span><br><span class="line">        <span class="comment">//执行异步任务并返回提交结果</span></span><br><span class="line">        Future&lt;String&gt; res = executor.submit(<span class="keyword">new</span> myTask());</span><br><span class="line">        <span class="comment">//submit方法还可以接收runnable。</span></span><br><span class="line">        <span class="comment">//如果传递的是runnable，那么还可以提供一个预先返回值，当任务执行完时，</span></span><br><span class="line">        <span class="comment">//会返回这个预置结果值。在run方法对预置的任何改变都没用</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        <span class="comment">//查看提交结果</span></span><br><span class="line">        System.out.println(res.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">myTask2</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> res=<span class="number">2</span>;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//尽管这里改变了，但是输出还是2。</span></span><br><span class="line">            setRes(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRes</span><span class="params">(<span class="keyword">int</span> res)</span></span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.res=res;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于需要用子线程来需要返回处理结果的，还是要用callable接口。</p>
+<h3 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h3><p>Future 类</p>
+<ol>
+<li>boolean cancel(boolean mayInterruptIfRunning)：用于取消任务。 如果任务已完成，以取消或者不能取消，返回false。如果任务未开始，则不再运行。如果在运行，且参数为true，则产生中断，如果run方法中不响应中断，那你也没办法。</li>
+</ol>
+<p>ExecutorService </p>
+<p>任务执行服务，可以接收很多任务的执行，所以如果不关闭的话，他会一直等待新任务。</p>
+<ol>
+<li>void    shutdown() ：不再接收新任务，已执行的任务继续执行，即使任务还未开始执行</li>
+<li>List<runnable> shutdownNow()：终止所有任务，正在运行的任务产生中断，返回已提交但未运行的任务。</runnable></li>
+<li>invokeAll 传递批量任务，必须等所有任务执行完，才返回 Future。</li>
+<li>invokeAny 传递批量任务，只要有一个任务执行完了就返回执行结果，其它任务都取消。</li>
+</ol>
+<h3 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h3><p>线程池：是ExecutorService的子类，表明他也是一个异步执行服务。前面我们使用了<code>newSingleThreadExecutor</code>，它是一个单线程的Executor。而线程池是一个多线程的：他有很多工作线程，以及任务队列。工作线程从任务队列中取任务执行。用法都一样，不过他有一个关键参数。</p>
+<ol>
+<li>corePoolSize 表示核心线程数</li>
+<li>maximumPoolSize 最大线程数，一般大于等于核心线程数</li>
+<li>keepAliveTime 空闲线程存活时间</li>
+</ol>
+<p>刚new对象时，一个线程都没有。以后每来一个任务，都创建一个线程，直到达到最大线程数。这是如果有空闲线程且超过存活时间，那么线程会减少，减少到核心线程数。也可以指定参数，使核心线程数也被减少。</p>
+<p>任务队列使用前面介绍的并发队列实现的。如果没有空闲线程，且队列有界，那么就会拒绝任务，默认的拒绝方式是抛出异常。</p>
+<h3 id="ExecutorService的一些实现类"><a href="#ExecutorService的一些实现类" class="headerlink" title="ExecutorService的一些实现类"></a>ExecutorService的一些实现类</h3><ol>
+<li>newSingleThreadExecutor ：只有一个线程，其它任务加入无界等待队列</li>
+<li>newFixedThreadPool(int nThreads) ：有n个线程，其它任务加入无界等待队列</li>
+<li>newCachedThreadPool()：空闲线程存活一分钟，如果如果当前没有空闲线程，则无限的创建新线程。</li>
+</ol>
+<p>何时使用</p>
+<p>如果系统负载很高，用第二个。如果负载不高，且每个线程的运行时间都很短，可以用第三个。</p>
+<h3 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h3><p>定时任务主要有两个类</p>
+<ol>
+<li>TimerTask抽象类，需要用户实现run方法，表示一个定时任务</li>
+<li>Timer具体定时任务的执行类，通过schedule方法传递任务</li>
+<li>schedule：当前任务在前面任务<code>开始之前</code>延迟一定时间后执行，如果前面的任务运行时间过长，那么后面的任务会立马执行。</li>
+<li>scheduleAtFixedRate：从指定时间开始，按固定频率执行，如果被耽误了，则一次执行完所有过期任务。</li>
+</ol>
+<h4 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h4><p>它只有一个线程，一个等待队列。队列是按过期时间排序的，哪个快过期了哪个就在前面。每次取的时候，就检查过期时间，每次入的时候就吧快过期的放前面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BasicTimer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimerTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"hello"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DelayTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span></span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"delay task"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Timer timer = <span class="keyword">new</span> Timer();</span><br><span class="line">        timer.schedule(<span class="keyword">new</span> DelayTask(),<span class="number">10</span>);</span><br><span class="line">        timer.schedule(<span class="keyword">new</span> MyTimerTask(),<span class="number">100</span>,<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">delay task</span><br><span class="line">hello<span class="comment">//紧跟delay task 输出的</span></span><br><span class="line">hello</span><br><span class="line">hello</span><br><span class="line">hello</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/11/mediator/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/12/thread-coopeartion/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Java泛型 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="泛型类基本使用1234567891011121314151617181920212223//这是一个能装任何东西的笼子public class Cage&amp;lt;T&amp;gt; &amp;#123;    private T item;    //存入笼子    public void store(T item)&amp;#123;        this.item=item;    &amp;#125;    //从笼子中取">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java泛型">
+<meta property="og:url" content="https://threewater.xyz/2019/02/13/generic/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="泛型类基本使用1234567891011121314151617181920212223//这是一个能装任何东西的笼子public class Cage&amp;lt;T&amp;gt; &amp;#123;    private T item;    //存入笼子    public void store(T item)&amp;#123;        this.item=item;    &amp;#125;    //从笼子中取">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-14T06:44:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java泛型">
+<meta name="twitter:description" content="泛型类基本使用1234567891011121314151617181920212223//这是一个能装任何东西的笼子public class Cage&amp;lt;T&amp;gt; &amp;#123;    private T item;    //存入笼子    public void store(T item)&amp;#123;        this.item=item;    &amp;#125;    //从笼子中取">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型类"><span class="toc-text">泛型类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本使用"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java是如何实现泛型的呢？"><span class="toc-text">java是如何实现泛型的呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类与继承"><span class="toc-text">泛型类与继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结论"><span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛化方法"><span class="toc-text">泛化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么样的方法是泛化方法呢？"><span class="toc-text">什么样的方法是泛化方法呢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型接口"><span class="toc-text">泛型接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型接口及其使用"><span class="toc-text">泛型接口及其使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型参数也可以有边界"><span class="toc-text">类型参数也可以有边界</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#上界"><span class="toc-text">上界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-上界为类的情况。"><span class="toc-text">1.上界为类的情况。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-上界类为接口"><span class="toc-text">2.上界类为接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-上界为其它类型参数"><span class="toc-text">3. 上界为其它类型参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通配符"><span class="toc-text">通配符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-generic" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Java泛型</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.13</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h2><h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这是一个能装任何东西的笼子</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T item;</span><br><span class="line">    <span class="comment">//存入笼子</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(T item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item=item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从笼子中取出</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span></span>&#123;</span><br><span class="line">        T tmp_item=item;</span><br><span class="line">        item=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> tmp_item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//现在用一用这个笼子</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Execute</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage&lt;String&gt; cage=<span class="keyword">new</span> Cage&lt;&gt;();</span><br><span class="line">        cage.store(<span class="string">"一个字符串"</span>);</span><br><span class="line">        String str = cage.get();<span class="comment">//这里会进行强转</span></span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="java是如何实现泛型的呢？"><a href="#java是如何实现泛型的呢？" class="headerlink" title="java是如何实现泛型的呢？"></a>java是如何实现泛型的呢？</h3><p>我们反编译.class文件看一下。结果如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//反编译后的部分代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T item;<span class="comment">//为什么没有替换为Object？！！！</span></span><br><span class="line">    <span class="comment">//实际上是替换为了Object，只是泛型信息依然被文件记录了(通过注释?)。</span></span><br><span class="line">    <span class="comment">//反编译软件智能的识别出了泛型</span></span><br><span class="line">    <span class="comment">//.....</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Execute</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage&lt;String&gt; cage = <span class="keyword">new</span> Cage();<span class="comment">//这里&lt;String&gt;也应该没有的</span></span><br><span class="line">        String str = (String)cage.get();<span class="comment">//这里强转了，没错。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>理论上，代码应该是这样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object item;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Object item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item=item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">get</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Object tmp_item=item;</span><br><span class="line">        item=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> tmp_item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Execute</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage cage=<span class="keyword">new</span> Cage&lt;&gt;();</span><br><span class="line">        cage.store(<span class="string">"一个字符串"</span>);</span><br><span class="line">        String str = (String)cage.get();</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="泛型类与继承"><a href="#泛型类与继承" class="headerlink" title="泛型类与继承"></a>泛型类与继承</h3><p>泛型类的子类要么指定父类的类型参数，要么就一起继承，不指定父类类型参数不太好：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指定父类的类型参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span> <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">Animal</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//一起继承</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类也可以有自己的类型参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">E</span>,<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//或者这样</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">Animal</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类的类型参数也可以与父类的有继承关系</span></span><br><span class="line"><span class="comment">//T是从父类继承而来。E是子类的，是T的子类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">E</span> <span class="keyword">extends</span> <span class="title">T</span>,<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//或者这样</span></span><br><span class="line"><span class="comment">//T从父类继承而来。E是子类的，是T的父类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">E</span>,<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//如果用super呢？不行，如果T是Object，那E是什么？</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span>&lt;<span class="title">E</span> <span class="title">super</span> <span class="title">T</span>,<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><ol>
+<li><p>这里<code>T</code>称为<code>类型参数</code>，在使用的时候指定具体类型。</p>
+</li>
+<li><p>在这个Cage类编译的时候，javac会把所有的<code>T</code>替换为Object，去掉所有jvm不认得的<code>&lt;&gt;</code>。对有类型冲突的地方进行强转。</p>
+</li>
+<li><p>泛型使我们不用手动强转，也不用担心强转出错。提高了代码的健壮性和美观性。</p>
+</li>
+<li><p>类型参数<code>T</code>不能用于静态变量，静态代码块，静态方法中。只能用于实例变量以及实例方法。</p>
+</li>
+<li><p>泛型擦除是为了兼容老的java，但是也带来了一些问题，如下</p>
+</li>
+<li><p>不能创建泛型数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cage[] cages=<span class="keyword">new</span> Cage&lt;Dog&gt;[<span class="number">20</span>];<span class="comment">//本来希望存狗</span></span><br><span class="line"><span class="comment">//由于泛型擦除，cages变成了普通数组</span></span><br><span class="line">cages[<span class="number">0</span>]=<span class="keyword">new</span> Cage&lt;Pig&gt;();<span class="comment">//由于类型擦除，这也是一个普通的笼子，所以这里也没问题。</span></span><br><span class="line"><span class="comment">//但是以上违背了初衷，所以java禁止创建泛型数组</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不能用类型参数来new对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">E</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> E e=<span class="keyword">new</span> E();</span><br><span class="line">    <span class="comment">//我们可能想这样用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage&lt;String&gt; cage=<span class="keyword">new</span> Cage&lt;&gt;();</span><br><span class="line">        String str=cage.e;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//由于类型擦除，代码可能会变成这样</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Oject e=<span class="keyword">new</span> Oject();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage cage=<span class="keyword">new</span> Cage();</span><br><span class="line">        String str=(String)cage.e;<span class="comment">//错误，父类不能转为子类</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果有一个类继承了泛型类，在类型擦除时，会生成桥方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> T item;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(T item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item = item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//我们希望重写父类的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span> <span class="keyword">extends</span> <span class="title">Cage</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Integer item)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"small store"</span>);</span><br><span class="line">        <span class="keyword">super</span>.store(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//由于类型擦除，可能会变成这样</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Oject item;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Oject item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item = item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span> <span class="keyword">extends</span> <span class="title">Cage</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Integer item)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"small store"</span>);</span><br><span class="line">        <span class="keyword">super</span>.store(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//相当于没有被重写，而是被重载了！那么我们可以这样用</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> SmallCage().store(<span class="string">"dd"</span>);<span class="comment">//调用父类的store方法</span></span><br><span class="line">    	<span class="comment">//这显然违背了初衷，我们本来希望Cage存的是Integer，但貌似存String也没问题。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实际上SmallCage会被编译成这样</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmallCage</span> <span class="keyword">extends</span> <span class="title">Cage</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Integer item)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"small store"</span>);</span><br><span class="line">        <span class="keyword">super</span>.store(item);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Oject item)</span> </span>&#123;<span class="comment">//Bridge Method</span></span><br><span class="line">        store((Integer)item);<span class="comment">//调用本类方法，如果不是Integer就会报错。保证初衷不变。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="泛化方法"><a href="#泛化方法" class="headerlink" title="泛化方法"></a>泛化方法</h2><p>泛型也可以作用于方法<br>泛化方法与泛型类没有必然联系，泛化方法可以在泛型类中，也可以在普通类中。<br>类型参数也可以有多个。<br>泛化方法可以是静态的。<br>泛化方法在使用时，不需要指定类型参数的实际类型</p>
+<h3 id="什么样的方法是泛化方法呢？"><a href="#什么样的方法是泛化方法呢？" class="headerlink" title="什么样的方法是泛化方法呢？"></a>什么样的方法是泛化方法呢？</h3><p>就是在方法声明上，返回值前面，带有类似<code>&lt;U&gt;</code>的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(T item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item=item;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//干死这个笼子，随你用什么工具</span></span><br><span class="line">    <span class="keyword">public</span> &lt;U&gt; <span class="function"><span class="keyword">void</span> <span class="title">destroy</span><span class="params">(U tool)</span></span>&#123;<span class="comment">//暂且容许我这么写</span></span><br><span class="line">        System.out.println(<span class="string">"the cage has been destroyed"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Execute</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cage&lt;String&gt; cage=<span class="keyword">new</span> Cage&lt;&gt;();<span class="comment">//需要指定实际类型</span></span><br><span class="line">        cage.destroy(<span class="string">"这是一把斧子"</span>);<span class="comment">//不需要指定实际类型，java会自动判断</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h2><h3 id="泛型接口及其使用"><a href="#泛型接口及其使用" class="headerlink" title="泛型接口及其使用"></a>泛型接口及其使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//能添加颜色的接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CanAddColor</span>&lt;<span class="title">C</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addColor</span><span class="params">(C color)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在实现接口时，指定其参数类型</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">CanAddColor</span>&lt;<span class="title">RedColor</span>&gt;</span>&#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addColor</span><span class="params">(RedColor color)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"为笼子上红色"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="类型参数也可以有边界"><a href="#类型参数也可以有边界" class="headerlink" title="类型参数也可以有边界"></a>类型参数也可以有边界</h2><h3 id="上界"><a href="#上界" class="headerlink" title="上界"></a>上界</h3><p>上界可以是类(final类也可以,但是没什么卵用,会被看作final类的父类)，也可以是一个接口，还可以是其它类型参数。</p>
+<h3 id="1-上界为类的情况。"><a href="#1-上界为类的情况。" class="headerlink" title="1.上界为类的情况。"></a>1.上界为类的情况。</h3><p>编译器在编译这个类文件的时候，就不是转为Object了，而是转为上界类。</p>
+<p>我们改一下前面的笼子类，变成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"动物会动"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//笼子只能装动物</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Animal</span>&gt;</span>&#123;<span class="comment">//Animal为上界</span></span><br><span class="line">    <span class="comment">//笼子会摇晃</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shake</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//我们可以把这个T当作Animal来用，他有Animal的方法。</span></span><br><span class="line">        item.move();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反编译看一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//反编译软件太智能，自动识别出了泛型，以下是我瞎编的。</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Animal item;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Cage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(Animal item)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.item = item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Animal <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Animal tmp_item = <span class="keyword">this</span>.item;</span><br><span class="line">        <span class="keyword">this</span>.item = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> tmp_item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-上界类为接口"><a href="#2-上界类为接口" class="headerlink" title="2.上界类为接口"></a>2.上界类为接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//活着的东西</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IAlive</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//笼子只能装活着的东西</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">IAlive</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> IAlive item;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-上界为其它类型参数"><a href="#3-上界为其它类型参数" class="headerlink" title="3. 上界为其它类型参数"></a>3. 上界为其它类型参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">	<span class="comment">//替换笼中的东西，但我希望替换的是它的子类</span></span><br><span class="line">    <span class="keyword">public</span> &lt;K extends T&gt; <span class="function"><span class="keyword">void</span> <span class="title">replace</span><span class="params">(K another_item)</span></span>&#123;</span><br><span class="line">        item=another_item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//也可以这样实现，但这样K就暴露给整个类了，不太好</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>,<span class="title">K</span> <span class="keyword">extends</span> <span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">replace</span><span class="params">(K another_item)</span></span>&#123;</span><br><span class="line">        item=another_item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><p>上面的replace方法，那个K几乎没用到，我们想当然的这么写。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">	<span class="comment">//这样写</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">replace</span><span class="params">(? extends K another_item)</span></span>&#123;<span class="comment">//错误</span></span><br><span class="line">        item=another_item;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//或者这么写</span></span><br><span class="line">    <span class="keyword">public</span> &lt;? extends T&gt; <span class="function"><span class="keyword">void</span> <span class="title">replace</span><span class="params">(? another_item)</span></span>&#123;<span class="comment">//错误</span></span><br><span class="line">        item=another_item;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是通配符不能作为形参，也不能作为返回值。<br>如果想使用通配符必须有一个东西来包装它，就像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//从另一个笼子中添加东西到当前笼子，并且希望笼子里的东西是当前笼子的子类</span></span><br><span class="line">    <span class="comment">//可以这么写：</span></span><br><span class="line">    <span class="keyword">public</span> &lt;K extends T&gt; <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(Cage&lt;K&gt; another_cage)</span></span>&#123;</span><br><span class="line">        item=another_cage.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//也可以用通配符，这样我们及少写了一个K：</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Cage&lt;? extends T&gt; another_cage)</span></span>&#123;</span><br><span class="line">        item=another_cage.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通配符还可以指定下界，这是类型参数所不行的。像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cage</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">	<span class="comment">//我们希望添加的是T的父类</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">add2</span><span class="params">(Cage&lt;? <span class="keyword">super</span> T&gt; another_cage)</span></span>&#123;</span><br><span class="line">		<span class="comment">//item=another_cage.get();another_cage不能用来读，看后面。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><p>Cage<animal> 与Cage<dog>  没有父子关系。</dog></animal></p>
+</li>
+<li><p><code>？extends 类A</code> 只能用来读。读的时候读取的都是类A的子类，然后我们用类A的变量引用它（父类引用子类），这是没有问题的。但是如果我们写：<code>？extends 类A</code>表示我们可以写入A以及A的子类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设有这样一个变量</span></span><br><span class="line">Cage&lt;? extends Animal&gt; a_cage;</span><br><span class="line"><span class="comment">//那么理论上说我们可以往这个笼子里面存只要是继承的Animal的类</span></span><br><span class="line"><span class="comment">//但是这个cage只是一个变量，他必定要赋值才能用，就像这样</span></span><br><span class="line"><span class="comment">//赋值情况1</span></span><br><span class="line">a_cage=<span class="keyword">new</span> Cage&lt;Animal&gt;();</span><br><span class="line">a_cage.store(<span class="keyword">new</span> Pig());</span><br><span class="line"><span class="comment">//如果是情况1，那么a_cage确实可以放继承了Animal动物任意类。放Dog，Pig都可以</span></span><br><span class="line"><span class="comment">//现在我们放入Pig。存放Animal的笼子，存放Pig没问题。</span></span><br><span class="line"><span class="comment">//赋值情况2</span></span><br><span class="line">a_cage=<span class="keyword">new</span> Cage&lt;Dog&gt;();</span><br><span class="line">Animal a=<span class="keyword">new</span> Rabbit()；</span><br><span class="line">a_cage.store(a);</span><br><span class="line">a_cage.store(<span class="keyword">new</span> Pig());</span><br><span class="line"><span class="comment">//a虽然是Animal，但是它可以是任何动物！，然后放入了Dog的笼子，违背初衷</span></span><br><span class="line"><span class="comment">//Pig放入了Dog笼子，违背初衷。</span></span><br><span class="line"><span class="comment">//那么可能会问谁TM会这样写啊</span></span><br><span class="line">Cage&lt;? extends Animal&gt; a_cage=<span class="keyword">new</span> Cage&lt;Dog&gt;();</span><br><span class="line">a_cage.store(<span class="keyword">new</span> Pig());<span class="comment">//上面一行不是写了Cage&lt;Dog&gt;嘛！</span></span><br><span class="line"><span class="comment">//但是这有可能发生在方法上：</span></span><br><span class="line"><span class="comment">//有一个方法，它可以往笼子中存入动物，但希望笼子是放动物的：</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Cage&lt;? extends Animal&gt; a_cage)</span></span>&#123;</span><br><span class="line">    Animal a_kind_animal=<span class="keyword">new</span> Animal();<span class="comment">//也可以new Rabbit();</span></span><br><span class="line">    a_cage.store(a_kind_animal);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//如果我们单纯的看这个方法：它想要一个放动物的笼子，并且把某种动物放入其中。是没问题的</span></span><br><span class="line"><span class="comment">//但是a_cage只是一个变量，具体指向什么呢？还要看调用者的心情</span></span><br><span class="line"><span class="comment">//假设调用者这样：</span></span><br><span class="line">put(<span class="keyword">new</span> Cage(Dog));</span><br><span class="line"><span class="comment">//所以Cage&lt;? extends Animal&gt; a_cage不能涉及写操作。</span></span><br><span class="line"><span class="comment">//如果就是要使这个put方法有用，那该怎么办呢？我们可以使用super:</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Cage&lt;? <span class="keyword">super</span> Animal&gt; a_cage)</span></span>&#123;</span><br><span class="line">    Animal a_kind_animal=<span class="keyword">new</span> Animal();</span><br><span class="line">    a_cage.store(a_kind_animal);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这样就保证了a_cage肯定是能放Animal的，而不是只能放某种具体的动物</span></span><br><span class="line"><span class="comment">//这样，调用者就不能猥琐欲为了，它只能这样</span></span><br><span class="line">put(<span class="keyword">new</span> Cage&lt;Animal&gt;());</span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line">put(<span class="keyword">new</span> Cage&lt;Object&gt;());</span><br><span class="line"></span><br><span class="line"><span class="comment">//既然Cage&lt;? extends Animal&gt; a_cage不能涉及写操作。那么读有没有问题呢？</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">animalMove</span><span class="params">(Cage&lt;? extends Animal&gt; cage)</span></span>&#123;</span><br><span class="line">        Animal animal = cage.get();</span><br><span class="line">    	animal.move();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//读是没有问题的，因为cage里面至少是一个动物，我们至少可以使用Animal的方法</span></span><br><span class="line"><span class="comment">//那么super存不存在读问题呢？</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">animalMove</span><span class="params">(Cage&lt;? <span class="keyword">super</span> Animal&gt; cage)</span></span>&#123;</span><br><span class="line">        Animal animal = cage.get();</span><br><span class="line">    	animal.move();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//由于这个方法期望的的是Animal以及Animal的父类，那么调用者可以这样写</span></span><br><span class="line">animalMove(<span class="keyword">new</span> Cage&lt;Animal&gt;());<span class="comment">//看起来正确</span></span><br><span class="line">animalMove(<span class="keyword">new</span> Cage&lt;Oject&gt;());<span class="comment">//错误，Cage存的是Object，但方法内部却把它当成了Animal</span></span><br><span class="line"><span class="comment">//可见super用来的读是有问题的，它唯一能保证的就是cage里面放的是Object。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">animalMove</span><span class="params">(Cage&lt;? <span class="keyword">super</span> Animal&gt; cage)</span></span>&#123;</span><br><span class="line">    	<span class="comment">//没有意义，因为你不能把animal转为任何类型，因为你不知道cage里面到底装的是什么</span></span><br><span class="line">        Ojbect animal = cage.get();</span><br><span class="line">    	<span class="comment">//animal.move();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>&lt;？extends some_class&gt;</code>只能用来读，不管容器里面是什么，但一定是some_class，取出来用some_class引用是没问题的。</p>
+<p>不能用来写，因为只知道容器里面是some_class的子类，具体是什么不知道，所以贸然的写入是危险的。java禁止了写。</p>
+<p><code>&lt;? super some_class&gt;</code>只能用来写，因为一定是some_class或者其父类，所以如果我们想写，只要写入的类继承了somre_class，就没错。</p>
+<p>不能用来读，因为它只能保证是Object，具体是什么不知道，也不敢转为具体某个类型，所以java在编译阶段就禁止了读。</p>
+</li>
+</ol>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/12/random/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/15/source-code1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

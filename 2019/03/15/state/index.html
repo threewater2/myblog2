@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>状态设计模式 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="一个对象会有很多种状态，虽然对象的操作是一样的，但是在不同状态下的操作结果是不同的，对象可能因为某些操作从一种状态转变为另外一种状态。对象应该保存多种状态，但是他有一个表示当前状态。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="状态设计模式">
+<meta property="og:url" content="https://threewater.xyz/2019/03/15/state/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="一个对象会有很多种状态，虽然对象的操作是一样的，但是在不同状态下的操作结果是不同的，对象可能因为某些操作从一种状态转变为另外一种状态。对象应该保存多种状态，但是他有一个表示当前状态。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-15T03:46:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="状态设计模式">
+<meta name="twitter:description" content="一个对象会有很多种状态，虽然对象的操作是一样的，但是在不同状态下的操作结果是不同的，对象可能因为某些操作从一种状态转变为另外一种状态。对象应该保存多种状态，但是他有一个表示当前状态。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-state" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">状态设计模式</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.15</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>一个对象会有很多种状态，虽然对象的操作是一样的，但是在不同状态下的操作结果是不同的，对象可能因为某些操作从一种状态转变为另外一种状态。对象应该保存多种状态，但是他有一个表示当前状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="comment">//投一分钱</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//弹出一分钱</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//弹出糖果</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HasQuarterState</span> <span class="keyword">implements</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> GumballMachine machine;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HasQuarterState</span><span class="params">(GumballMachine machine)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.machine=machine;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"dont insert quarter second"</span>);</span><br><span class="line">        machine.setCurrentState(machine.getSoldState());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"please wait"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"please wait"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoQuarterState</span> <span class="keyword">implements</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> GumballMachine machine;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoQuarterState</span><span class="params">(GumballMachine machine)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.machine=machine;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"you have insert a quarter"</span>);</span><br><span class="line">        machine.setCurrentState(machine.getSoldState());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"you dont insert a quarter"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"no quarter"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoldOutState</span> <span class="keyword">implements</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> GumballMachine machine;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SoldOutState</span><span class="params">(GumballMachine machine)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.machine=machine;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"sorry the gumball sold out"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"please insert quarter"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"sorry the gumball sold out"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoldState</span> <span class="keyword">implements</span> <span class="title">State</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> GumballMachine machine;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SoldState</span><span class="params">(GumballMachine machine)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.machine=machine;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"dont insert quarter twice"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"eject quarter"</span>);</span><br><span class="line">        machine.setCurrentState(machine.getNoQuarterState());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(machine.realseBall())&#123;</span><br><span class="line">            System.out.println(<span class="string">"here. give you a gumball"</span>);</span><br><span class="line">            machine.setCurrentState(machine.getNoQuarterState());</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"sorry the gumball sold out"</span>);</span><br><span class="line">            machine.setCurrentState(machine.getSoldOutState());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GumballMachine</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> State hasQuarterState;</span><br><span class="line">    <span class="keyword">private</span> State noQuarterState;</span><br><span class="line">    <span class="keyword">private</span> State soldOutState;</span><br><span class="line">    <span class="keyword">private</span> State soldState;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">    <span class="keyword">private</span> State currentState;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GumballMachine</span><span class="params">(<span class="keyword">int</span> count)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.count=count;</span><br><span class="line">        hasQuarterState=<span class="keyword">new</span> HasQuarterState(<span class="keyword">this</span>);</span><br><span class="line">        noQuarterState=<span class="keyword">new</span> NoQuarterState(<span class="keyword">this</span>);</span><br><span class="line">        soldOutState=<span class="keyword">new</span> SoldOutState(<span class="keyword">this</span>);</span><br><span class="line">        soldState=<span class="keyword">new</span> SoldState(<span class="keyword">this</span>);</span><br><span class="line">        currentState=count&gt;<span class="number">0</span>?noQuarterState:soldOutState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getHasQuarterState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> hasQuarterState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getNoQuarterState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> noQuarterState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getSoldOutState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> soldOutState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> State <span class="title">getSoldState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> soldState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentState</span><span class="params">(State state)</span></span>&#123;</span><br><span class="line">        currentState=state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">realseBall</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp=count;</span><br><span class="line">        <span class="keyword">if</span>(count&gt;<span class="number">0</span>) count--;</span><br><span class="line">        <span class="keyword">return</span> tmp&gt;<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span></span>&#123;</span><br><span class="line">        currentState.insertQuarter();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span></span>&#123;</span><br><span class="line">        currentState.ejectQuarter();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span></span>&#123;</span><br><span class="line">        currentState.turnCrank();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        GumballMachine machine = <span class="keyword">new</span> GumballMachine(<span class="number">4</span>);</span><br><span class="line">        machine.ejectQuarter();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.ejectQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.ejectQuarter();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.ejectQuarter();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.insertQuarter();</span><br><span class="line">        machine.turnCrank();</span><br><span class="line">        machine.ejectQuarter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">you dont insert a quarter</span><br><span class="line">you have insert a quarter</span><br><span class="line">eject quarter</span><br><span class="line">no quarter</span><br><span class="line">you dont insert a quarter</span><br><span class="line">you have insert a quarter</span><br><span class="line">here. give you a gumball</span><br><span class="line">no quarter</span><br><span class="line">you have insert a quarter</span><br><span class="line">here. give you a gumball</span><br><span class="line">you dont insert a quarter</span><br><span class="line">you have insert a quarter</span><br><span class="line">here. give you a gumball</span><br><span class="line">you have insert a quarter</span><br><span class="line">here. give you a gumball</span><br><span class="line">no quarter</span><br><span class="line">you have insert a quarter</span><br><span class="line">sorry the gumball sold out</span><br><span class="line">please insert quarter</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/15/obsrever/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/15/strategy/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

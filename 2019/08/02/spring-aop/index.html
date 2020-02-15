@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>org.aopalliance包的一点理解 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="JoinPoint我翻译为连接点，连接点是程序运行时产生的一系列事件，比如方法被调用了，属性被访问了，构造函数被调用了，等。从此连接点可分为静态部分和动态部分，静态部分就是事件本体：比如方法，构造函数，属性，等。动态部分就是事件的工作，比如调用，访问，等。连接点的静态部分可以通过getStaticPart()获取。动态部由其子类实现。 Interceptor拦截器，拦截器就像监听器，监听程序运行时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="org.aopalliance包的一点理解">
+<meta property="og:url" content="https://threewater.xyz/2019/08/02/spring-aop/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="JoinPoint我翻译为连接点，连接点是程序运行时产生的一系列事件，比如方法被调用了，属性被访问了，构造函数被调用了，等。从此连接点可分为静态部分和动态部分，静态部分就是事件本体：比如方法，构造函数，属性，等。动态部分就是事件的工作，比如调用，访问，等。连接点的静态部分可以通过getStaticPart()获取。动态部由其子类实现。 Interceptor拦截器，拦截器就像监听器，监听程序运行时">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-02T01:41:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="org.aopalliance包的一点理解">
+<meta name="twitter:description" content="JoinPoint我翻译为连接点，连接点是程序运行时产生的一系列事件，比如方法被调用了，属性被访问了，构造函数被调用了，等。从此连接点可分为静态部分和动态部分，静态部分就是事件本体：比如方法，构造函数，属性，等。动态部分就是事件的工作，比如调用，访问，等。连接点的静态部分可以通过getStaticPart()获取。动态部由其子类实现。 Interceptor拦截器，拦截器就像监听器，监听程序运行时">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JoinPoint"><span class="toc-text">JoinPoint</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor"><span class="toc-text">Interceptor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Invocation"><span class="toc-text">Invocation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Advice"><span class="toc-text">Advice</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MethodInvocation"><span class="toc-text">MethodInvocation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ConstructorInvocation"><span class="toc-text">ConstructorInvocation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MethodInterceptor"><span class="toc-text">MethodInterceptor</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-spring-aop" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">org.aopalliance包的一点理解</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.08.02</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="JoinPoint"><a href="#JoinPoint" class="headerlink" title="JoinPoint"></a>JoinPoint</h1><p>我翻译为连接点，连接点是程序运行时产生的一系列事件，比如方法被调用了，属性被访问了，构造函数被调用了，等。<br>从此连接点可分为静态部分和动态部分，静态部分就是事件本体：比如方法，构造函数，属性，等。<br>动态部分就是事件的工作，比如调用，访问，等。<br>连接点的静态部分可以通过<code>getStaticPart()</code>获取。<br>动态部由其子类实现。</p>
+<h1 id="Interceptor"><a href="#Interceptor" class="headerlink" title="Interceptor"></a>Interceptor</h1><p>拦截器，拦截器就像监听器，监听程序运行时的一系列事件，比如方法被调用了他知道，属性被访问了它知道。<br>不过他和监听器不同，监听器不能防止事件继续进行，而拦截器可以。<br>拦截器需要被注册在连接点的静态部分上面。一个连接点上的多个拦截器构成让拦截器链。<br>连接点知道它身上有这个拦截器链。<br>针对不同的事件，自然有不同的拦截器，交由子类实现。</p>
+<h1 id="Invocation"><a href="#Invocation" class="headerlink" title="Invocation"></a>Invocation</h1><p>是JoinPoint的子接口，他表示程序运行时的调用事件。既然是调用，那么肯定会带一些入参。<br><code>Object[] getArguments()</code>可以获取调用时的入参。</p>
+<h1 id="Advice"><a href="#Advice" class="headerlink" title="Advice"></a>Advice</h1><p>这个不怎么理解，我翻译为增强。既然是增强，我猜他应该包含增强逻辑和增强的位置。</p>
+<h1 id="MethodInvocation"><a href="#MethodInvocation" class="headerlink" title="MethodInvocation"></a>MethodInvocation</h1><p>是Invocation的子类，表示方法被调用的事件，这样，他的静态部分就是方法了，所以他有一个<br><code>Method getMethod()</code>方法，获取其静态部分，是父类<code>getStaticPart()</code>的友好实现，他们都返回同一个结果。</p>
+<h1 id="ConstructorInvocation"><a href="#ConstructorInvocation" class="headerlink" title="ConstructorInvocation"></a>ConstructorInvocation</h1><p>是Invocation的子类，表示构造函数被调用的事件，同上。</p>
+<h1 id="MethodInterceptor"><a href="#MethodInterceptor" class="headerlink" title="MethodInterceptor"></a>MethodInterceptor</h1><p>方法拦截器，拦截方法被调用的事件，<br><code>Object invoke(MethodInvocation invocation)</code>参数是MethodInvocation，表明它可以拿到方法调用时的静态部分。<br>也就是Method，同时还可以拿到<code>MethodInvocation</code>中的调用入参，这样这个方法怎么执行，到底执不执行就完全<br>掌握在这个拦截器上了。这个方法应该调用<code>Joinpoint#proceed()</code>交给下面的拦截器。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/07/01/js01/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/02/15/2020-think/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>linux常用软件安装 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="配置,">
+  
+
+  <meta name="description" content="CentOS上JDK，TOMCAT，MYSQL的安装 环境：centos7 ，jdk18，mysql5.7  JDK8的安装1.安装基本工具yum install wget yum install vim2.使用wget下载jdk.rpm包64位 wget --no-cookie --no-check-certificate --header &amp;quot;Cookie: oraclelicense">
+<meta name="keywords" content="配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux常用软件安装">
+<meta property="og:url" content="https://threewater.xyz/2019/01/23/linux-app-install/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="CentOS上JDK，TOMCAT，MYSQL的安装 环境：centos7 ，jdk18，mysql5.7  JDK8的安装1.安装基本工具yum install wget yum install vim2.使用wget下载jdk.rpm包64位 wget --no-cookie --no-check-certificate --header &amp;quot;Cookie: oraclelicense">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-23T13:01:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux常用软件安装">
+<meta name="twitter:description" content="CentOS上JDK，TOMCAT，MYSQL的安装 环境：centos7 ，jdk18，mysql5.7  JDK8的安装1.安装基本工具yum install wget yum install vim2.使用wget下载jdk.rpm包64位 wget --no-cookie --no-check-certificate --header &amp;quot;Cookie: oraclelicense">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CentOS上JDK，TOMCAT，MYSQL的安装"><span class="toc-text">CentOS上JDK，TOMCAT，MYSQL的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK8的安装"><span class="toc-text">JDK8的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装基本工具"><span class="toc-text">1.安装基本工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用wget下载jdk-rpm包"><span class="toc-text">2.使用wget下载jdk.rpm包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-使用rpm命令安装jdk"><span class="toc-text">3.使用rpm命令安装jdk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-检验是否安装成功"><span class="toc-text">4.检验是否安装成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tomcat的安装"><span class="toc-text">tomcat的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-使用wget下载tomcat-tar-tgz压缩包"><span class="toc-text">1.使用wget下载tomcat.tar.tgz压缩包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用tar命令解压"><span class="toc-text">2.使用tar命令解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-复制tomcat到-usr-tomcat目录下"><span class="toc-text">3.复制tomcat到/usr/tomcat目录下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-进入tomcat目录"><span class="toc-text">4.进入tomcat目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-配置tomcat-home环境变量"><span class="toc-text">5.配置tomcat_home环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-进入tomcat的bin目录，启动tomcat"><span class="toc-text">6.进入tomcat的bin目录，启动tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-更改tomcat的默认端口号为80"><span class="toc-text">7.更改tomcat的默认端口号为80</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装mysql"><span class="toc-text">安装mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-下载mysql软件源"><span class="toc-text">1.下载mysql软件源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-安装软件源"><span class="toc-text">2.安装软件源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-配置mysql安装文件"><span class="toc-text">3.配置mysql安装文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-安装mysql"><span class="toc-text">4.安装mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-查看mysql自动生成的初始密码"><span class="toc-text">5.查看mysql自动生成的初始密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-使用初始密码登录"><span class="toc-text">6.使用初始密码登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-降低mysql对密码的检验强度"><span class="toc-text">7.降低mysql对密码的检验强度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-设置新密码"><span class="toc-text">8.设置新密码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其它"><span class="toc-text">其它</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-linux-app-install" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">linux常用软件安装</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.01.23</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/服务器/">服务器</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="CentOS上JDK，TOMCAT，MYSQL的安装"><a href="#CentOS上JDK，TOMCAT，MYSQL的安装" class="headerlink" title="CentOS上JDK，TOMCAT，MYSQL的安装"></a>CentOS上JDK，TOMCAT，MYSQL的安装</h1><blockquote>
+<p>环境：centos7 ，jdk18，mysql5.7</p>
+</blockquote>
+<h2 id="JDK8的安装"><a href="#JDK8的安装" class="headerlink" title="JDK8的安装"></a>JDK8的安装</h2><h3 id="1-安装基本工具"><a href="#1-安装基本工具" class="headerlink" title="1.安装基本工具"></a>1.安装基本工具</h3><pre><code>yum install wget
+yum install vim</code></pre><h3 id="2-使用wget下载jdk-rpm包"><a href="#2-使用wget下载jdk-rpm包" class="headerlink" title="2.使用wget下载jdk.rpm包"></a>2.使用wget下载jdk.rpm包</h3><pre><code>64位
+wget --no-cookie --no-check-certificate --header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.rpm -O jdk-8u102-linux-x64.rpm
+如果是32系统，请下载32包</code></pre><h3 id="3-使用rpm命令安装jdk"><a href="#3-使用rpm命令安装jdk" class="headerlink" title="3.使用rpm命令安装jdk"></a>3.使用rpm命令安装jdk</h3><pre><code>rpm -ivh jdk8.rpm</code></pre><h3 id="4-检验是否安装成功"><a href="#4-检验是否安装成功" class="headerlink" title="4.检验是否安装成功"></a>4.检验是否安装成功</h3><pre><code>java-version
+java
+javac</code></pre><h2 id="tomcat的安装"><a href="#tomcat的安装" class="headerlink" title="tomcat的安装"></a>tomcat的安装</h2><h3 id="1-使用wget下载tomcat-tar-tgz压缩包"><a href="#1-使用wget下载tomcat-tar-tgz压缩包" class="headerlink" title="1.使用wget下载tomcat.tar.tgz压缩包"></a>1.使用wget下载tomcat.tar.tgz压缩包</h3><pre><code>wget http://archive.apache.org/dist/tomcat/tomcat-9/v9.0.8/bin/apache-tomcat-9.0.8.tar.gz</code></pre><h3 id="2-使用tar命令解压"><a href="#2-使用tar命令解压" class="headerlink" title="2.使用tar命令解压"></a>2.使用tar命令解压</h3><pre><code>tar -zxvf tomcat.tar.gz</code></pre><h3 id="3-复制tomcat到-usr-tomcat目录下"><a href="#3-复制tomcat到-usr-tomcat目录下" class="headerlink" title="3.复制tomcat到/usr/tomcat目录下"></a>3.复制tomcat到/usr/tomcat目录下</h3><pre><code>mv tomcat /usr/tomcat</code></pre><h3 id="4-进入tomcat目录"><a href="#4-进入tomcat目录" class="headerlink" title="4.进入tomcat目录"></a>4.进入tomcat目录</h3><pre><code>cd /usr/tomcat/</code></pre><h3 id="5-配置tomcat-home环境变量"><a href="#5-配置tomcat-home环境变量" class="headerlink" title="5.配置tomcat_home环境变量"></a>5.配置tomcat_home环境变量</h3><pre><code>vim /etc/profile
+export TOMCAT_HOME=/user/tomcat/</code></pre><h3 id="6-进入tomcat的bin目录，启动tomcat"><a href="#6-进入tomcat的bin目录，启动tomcat" class="headerlink" title="6.进入tomcat的bin目录，启动tomcat"></a>6.进入tomcat的bin目录，启动tomcat</h3><pre><code>cd /usr/tomcat/bin
+chmod +x *.sh # 赋予可执行权限
+./startup.sh</code></pre><h3 id="7-更改tomcat的默认端口号为80"><a href="#7-更改tomcat的默认端口号为80" class="headerlink" title="7.更改tomcat的默认端口号为80"></a>7.更改tomcat的默认端口号为80</h3><pre><code>vim /usr/tomcat/conf/server.xml
+找到&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;
+改为80</code></pre><h2 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h2><h3 id="1-下载mysql软件源"><a href="#1-下载mysql软件源" class="headerlink" title="1.下载mysql软件源"></a>1.下载mysql软件源</h3><pre><code>wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm</code></pre><h3 id="2-安装软件源"><a href="#2-安装软件源" class="headerlink" title="2.安装软件源"></a>2.安装软件源</h3><pre><code>rpm -Uvh mysql.rpm</code></pre><h3 id="3-配置mysql安装文件"><a href="#3-配置mysql安装文件" class="headerlink" title="3.配置mysql安装文件"></a>3.配置mysql安装文件</h3><pre><code>vim /etc/yum.repos.d/mysql-community.repo
+把需要的安装数据库enable改为1，不需要的改为0</code></pre><h3 id="4-安装mysql"><a href="#4-安装mysql" class="headerlink" title="4.安装mysql"></a>4.安装mysql</h3><pre><code>yum install mysql-community-server</code></pre><h3 id="5-查看mysql自动生成的初始密码"><a href="#5-查看mysql自动生成的初始密码" class="headerlink" title="5.查看mysql自动生成的初始密码"></a>5.查看mysql自动生成的初始密码</h3><pre><code>vim /var/log/mysqld.log
+找到其中的temporary password</code></pre><h3 id="6-使用初始密码登录"><a href="#6-使用初始密码登录" class="headerlink" title="6.使用初始密码登录"></a>6.使用初始密码登录</h3><pre><code>mysql -uroot -p</code></pre><h3 id="7-降低mysql对密码的检验强度"><a href="#7-降低mysql对密码的检验强度" class="headerlink" title="7.降低mysql对密码的检验强度"></a>7.降低mysql对密码的检验强度</h3><pre><code>set global validate_password_policy=0;
+set global validate_password_mixed_case_count=0;
+set global validate_password_number_count=3;
+set global validate_password_special_char_count=0;
+set global validate_password_length=3;</code></pre><h3 id="8-设置新密码"><a href="#8-设置新密码" class="headerlink" title="8.设置新密码"></a>8.设置新密码</h3><pre><code>SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;123&apos;);</code></pre><h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1><pre><code>查看软件是否安装
+rpm -qa | grep jdk
+卸载软件
+rpm -e --nodeps  # 上面查询到的软件名</code></pre>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/01/23/tomcat9_config_https/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/01/24/messy-code/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

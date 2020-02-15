@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Java序列化 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="关于基本类型的贮存，我们有DataOutputStream但是，对于对象。我们必须一个个基本类型存，如果，一个对象中含有另一个对象，这种方式将会变得非常麻烦。Java为我们提供了序列化机制。让我们可以一键序列化对象。对于不想要序列化的字段，可以使用transient关键字，告诉虚拟机不要自动序列化，对于这个关键字声明的字段，我们还是可以使用writeObject方法来手动写入，在读取的时候注意顺序">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java序列化">
+<meta property="og:url" content="https://threewater.xyz/2019/03/05/serializable-1/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="关于基本类型的贮存，我们有DataOutputStream但是，对于对象。我们必须一个个基本类型存，如果，一个对象中含有另一个对象，这种方式将会变得非常麻烦。Java为我们提供了序列化机制。让我们可以一键序列化对象。对于不想要序列化的字段，可以使用transient关键字，告诉虚拟机不要自动序列化，对于这个关键字声明的字段，我们还是可以使用writeObject方法来手动写入，在读取的时候注意顺序">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-05T13:06:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java序列化">
+<meta name="twitter:description" content="关于基本类型的贮存，我们有DataOutputStream但是，对于对象。我们必须一个个基本类型存，如果，一个对象中含有另一个对象，这种方式将会变得非常麻烦。Java为我们提供了序列化机制。让我们可以一键序列化对象。对于不想要序列化的字段，可以使用transient关键字，告诉虚拟机不要自动序列化，对于这个关键字声明的字段，我们还是可以使用writeObject方法来手动写入，在读取的时候注意顺序">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-serializable-1" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Java序列化</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.05</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>关于基本类型的贮存，我们有<code>DataOutputStream</code>但是，对于对象。我们必须一个个基本类型存，如果，一个对象中含有另一个对象，这种方式将会变得非常麻烦。Java为我们提供了序列化机制。让我们可以一键序列化对象。对于不想要序列化的字段，可以使用<code>transient</code>关键字，告诉虚拟机不要自动序列化，对于这个关键字声明的字段，我们还是可以使用<code>writeObject</code>方法来手动写入，在读取的时候注意顺序。参见<a href="/2019/02/24/serializable/" title="serializable接口">serializable接口</a>。</p>
+<p>但由于Java自己的序列化机制和其它语言不通用。我们来使用第三方类库序列化成更加通用的格式。这里我们使用<code>Jackson</code>类库。我们需要<code>jackson-core</code>和<code>jackson-databind</code>两个jar包。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyJSON</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">"山水"</span>, <span class="number">18</span>);</span><br><span class="line">        ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        <span class="comment">//表示格式化输出，便于阅读</span></span><br><span class="line">        mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">        <span class="comment">//写出到字符串</span></span><br><span class="line">        String str = mapper.writeValueAsString(student);</span><br><span class="line">        <span class="comment">//写出到bytes</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = mapper.writeValueAsBytes(student);</span><br><span class="line">        <span class="comment">//写出到流</span></span><br><span class="line">        mapper.writeValue(<span class="keyword">new</span> FileOutputStream(<span class="string">"qwe"</span>),student);</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它会序列化所有为public的字段，以及有public get/set方法的字段。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot; : &quot;山水&quot;,</span><br><span class="line">  &quot;age&quot; : 18</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyJSON</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student(<span class="string">"山水"</span>, <span class="number">18</span>);</span><br><span class="line">        ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">        String str = mapper.writeValueAsString(student);</span><br><span class="line">        Student readStu = mapper.readValue(str, Student.class);</span><br><span class="line">        System.out.println(readStu);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">山水=18</span><br></pre></td></tr></table></figure>
+
+<p>同样read方法也可以接受不同参数作为输入。</p>
+<p>它不但可以序列化为json还可以序列化为xml</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    XmlMapper mapper = <span class="keyword">new</span> XmlMapper();</span><br><span class="line">    mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">    String str = mapper.writeValueAsString(<span class="keyword">new</span> Student(<span class="string">"山水"</span>, <span class="number">18</span>));</span><br><span class="line">    System.out.println(str);</span><br><span class="line">    Student student1 = mapper.readValue(str, Student.class);</span><br><span class="line">    System.out.println(student1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Student&gt;</span><br><span class="line">  &lt;name&gt;山水&lt;/name&gt;</span><br><span class="line">  &lt;age&gt;18&lt;/age&gt;</span><br><span class="line">&lt;/Student&gt;</span><br><span class="line"></span><br><span class="line">山水=18</span><br></pre></td></tr></table></figure>
+
+<p>还可以转换为二进制的json，也就是MessagePack。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper(<span class="keyword">new</span> MessagePackFactory());</span><br><span class="line">    Student student=<span class="keyword">new</span> Student(<span class="string">"山水"</span>,<span class="number">18</span>);</span><br><span class="line">    <span class="comment">//会报错，二进制json不支持此操作</span></span><br><span class="line">    <span class="comment">//String str = mapper.writeValueAsString(student);</span></span><br><span class="line">    <span class="keyword">byte</span>[] bytes = mapper.writeValueAsBytes(student);</span><br><span class="line">    Student student1 = mapper.readValue(bytes, Student.class);</span><br><span class="line">    System.out.println(str);</span><br><span class="line">    System.out.println(bytes.length);</span><br><span class="line">    System.out.println(student1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">18</span><br><span class="line">山水=18</span><br></pre></td></tr></table></figure>
+
+<p>普通类就介绍完了，接下来我们看一下容器类的序列化。</p>
+<p>List/Map</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test4</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    List&lt;Student&gt; list = Arrays.asList(<span class="keyword">new</span> Student(<span class="string">"三水"</span>, <span class="number">18</span>),<span class="keyword">new</span> Student(<span class="string">"山水2"</span>,<span class="number">19</span>));</span><br><span class="line">    ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">    mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">    String str = mapper.writeValueAsString(list);</span><br><span class="line">    System.out.println(str);</span><br><span class="line">    <span class="comment">//List/Map与一般对象不同的是，这里不是传class</span></span><br><span class="line">    List&lt;Student&gt; list2 = mapper.readValue(str, <span class="keyword">new</span> TypeReference&lt;List&lt;Student&gt;&gt;() &#123;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(list2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[ &#123;</span><br><span class="line">  &quot;name&quot; : &quot;三水&quot;,</span><br><span class="line">  &quot;age&quot; : 18</span><br><span class="line">&#125;, </span><br><span class="line">  &quot;name&quot; : &quot;山水2&quot;,</span><br><span class="line">  &quot;age&quot; : 19</span><br><span class="line">&#125; ]</span><br><span class="line">[三水=18, 山水2=19]</span><br></pre></td></tr></table></figure>
+
+<p>Jackson也可以支持注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JsonIgnoreProperties</span>(<span class="string">"age"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="meta">@JsonIgnore</span><span class="comment">//序列化和反序列化不会处理此字段</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Jackson默认不支持处理引用同一个对象的情况。也就是说如果我们有多个变量引用了同一个对象，那么反序列化的时候这些变量会指向不同的对象。我们可以使用<code>JsonIdentityInfo</code>注解来解决这个问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JsonIdentityInfo</span>(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = <span class="string">"uid"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Common</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//没有加注解之前</span><br><span class="line">&#123;</span><br><span class="line">  &quot;one&quot; : &#123;</span><br><span class="line">    &quot;name&quot; : &quot;山水&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;two&quot; : &#123;</span><br><span class="line">    &quot;name&quot; : &quot;山水&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">false</span><br><span class="line">//加了注解之后</span><br><span class="line">&#123;</span><br><span class="line">  &quot;one&quot; : &#123;</span><br><span class="line">    &quot;uid&quot; : 1,</span><br><span class="line">    &quot;name&quot; : &quot;山水&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;two&quot; : 1</span><br><span class="line">&#125;</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+
+<p>它生成了一个UID，在json中<code>two</code>变量引用了uid为1的对象，序列化的时候可以识别。</p>
+<p>Jackson不能处理循环引用，也就是两个对象相互引用，在序列化的时候会出现无限递归的情况。可以通过注解解决。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassB</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String nameB;</span><br><span class="line">    <span class="meta">@JsonManagedReference</span></span><br><span class="line">    <span class="keyword">public</span> ClassA classA;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassA</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String nameA;</span><br><span class="line">    <span class="meta">@JsonBackReference</span></span><br><span class="line">    <span class="keyword">public</span> ClassB classB;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test6</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    ClassA classA = <span class="keyword">new</span> ClassA();</span><br><span class="line">    classA.nameA=<span class="string">"A"</span>;</span><br><span class="line">    ClassB classB = <span class="keyword">new</span> ClassB();</span><br><span class="line">    classB.nameB=<span class="string">"B"</span>;</span><br><span class="line">    classA.classB=classB;</span><br><span class="line">    classB.classA=classA;</span><br><span class="line">    ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">    mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">    String str = mapper.writeValueAsString(classA);</span><br><span class="line">    System.out.println(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;nameA&quot; : &quot;A&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Jackson也可以忽略未知字段，也就是json中有而类中没有的字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//针对全局</span></span><br><span class="line">mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);</span><br><span class="line"><span class="comment">//针对某个类</span></span><br><span class="line"><span class="meta">@JsonIgnoreProperties</span>(ignoreUnknown = <span class="keyword">true</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Jackson默认不能处理多态，但是我们可以做如下配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JsonTypeInfo</span>(use = JsonTypeInfo.Id.NAME,include = JsonTypeInfo.As.PROPERTY,property = <span class="string">"type"</span>)</span><br><span class="line"><span class="meta">@JsonSubTypes</span>(&#123;</span><br><span class="line">        <span class="meta">@JsonSubTypes</span>.Type(value = SmallStudent.class, name = <span class="string">"small"</span>),</span><br><span class="line">        <span class="meta">@JsonSubTypes</span>.Type(value = BigStudent.class, name = <span class="string">"big"</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">//对父类做以上配置</span></span><br></pre></td></tr></table></figure>
+
+<p>就是告诉父类他有两个子类型，并且在json中添加type字段表示这两个子类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//没加之前</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"students"</span> : [ &#123;</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"小"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">18</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"大"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">19</span></span><br><span class="line">  &#125; ]</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">chapter14</span>.<span class="title">Student</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">com</span>.<span class="title">chapter14</span>.<span class="title">Student</span></span></span><br><span class="line"><span class="class">//加了之后</span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="string">"students"</span> : [ &#123;</span><br><span class="line">    <span class="string">"type"</span> : <span class="string">"small"</span>,</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"小"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">18</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="string">"type"</span> : <span class="string">"big"</span>,</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"大"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">19</span></span><br><span class="line">  &#125; ]</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">chapter14</span>.<span class="title">SmallStudent</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">com</span>.<span class="title">chapter14</span>.<span class="title">BigStudent</span></span></span><br></pre></td></tr></table></figure>
+
+<p>我们也可以自定义序列化为json后的属性名称。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">    <span class="meta">@JsonProperty</span>(<span class="string">"名字"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于日期格式，序列化后的可读性差，我们自定义序列化格式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyDate</span> </span>&#123;</span><br><span class="line">    <span class="meta">@JsonFormat</span>(pattern = <span class="string">"yyyy-MM-dd HH:mm:ss"</span>,timezone = <span class="string">"GMT+8"</span>)</span><br><span class="line">    <span class="keyword">public</span> Date my_date;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test8</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    MyDate myDate = <span class="keyword">new</span> MyDate();</span><br><span class="line">    myDate.my_date=<span class="keyword">new</span> Date();</span><br><span class="line">    ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">    String s = mapper.writeValueAsString(myDate);</span><br><span class="line">    System.out.println(s);</span><br><span class="line">    MyDate date1 = mapper.readValue(s, MyDate.class);</span><br><span class="line">    System.out.println(date1.my_date);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加注解前</span></span><br><span class="line">&#123;<span class="string">"my_date"</span>:<span class="number">1551790898630</span>&#125;</span><br><span class="line">Tue Mar <span class="number">05</span> <span class="number">21</span>:<span class="number">01</span>:<span class="number">38</span> CST <span class="number">2019</span></span><br><span class="line"><span class="comment">//加了注解后</span></span><br><span class="line">&#123;<span class="string">"my_date"</span>:<span class="string">"2019-03-05 21:00:55"</span>&#125;</span><br><span class="line">Tue Mar <span class="number">05</span> <span class="number">21</span>:<span class="number">00</span>:<span class="number">55</span> CST <span class="number">2019</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有默认构造方法，在反序列化时会抛出异常。如果不想定义默认构造方法，那么可以这么写。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">	<span class="meta">@JsonCreator</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(@JsonProperty(<span class="string">"name"</span>)</span> String name, @<span class="title">JsonProperty</span><span class="params">(<span class="string">"age"</span>)</span> <span class="keyword">int</span> age) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/04/prototype/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/05/Chain-Of-Responsibility/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

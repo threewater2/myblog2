@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>基于 AspectJ 的 AOP配置 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="前面介绍了Spring中AOP的配置，这种配置要求切面类必须实现Spring的接口，代码与Spring的耦合性较高，配置比较繁琐。现在我们我们用 AspectJ 来实现注解配置，这种配置不需要任何实现任何接口，普通POJO类就行，而且看起来更简洁。注解这种声明式编程最适合我这种厌恶配置文件的。 第一个例子 1234567891011121314151617181920212223242526272">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 AspectJ 的 AOP配置">
+<meta property="og:url" content="https://threewater.xyz/2019/04/09/aspectj/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="前面介绍了Spring中AOP的配置，这种配置要求切面类必须实现Spring的接口，代码与Spring的耦合性较高，配置比较繁琐。现在我们我们用 AspectJ 来实现注解配置，这种配置不需要任何实现任何接口，普通POJO类就行，而且看起来更简洁。注解这种声明式编程最适合我这种厌恶配置文件的。 第一个例子 1234567891011121314151617181920212223242526272">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-09T13:56:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于 AspectJ 的 AOP配置">
+<meta name="twitter:description" content="前面介绍了Spring中AOP的配置，这种配置要求切面类必须实现Spring的接口，代码与Spring的耦合性较高，配置比较繁琐。现在我们我们用 AspectJ 来实现注解配置，这种配置不需要任何实现任何接口，普通POJO类就行，而且看起来更简洁。注解这种声明式编程最适合我这种厌恶配置文件的。 第一个例子 1234567891011121314151617181920212223242526272">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-aspectj" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">基于 AspectJ 的 AOP配置</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.04.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>前面介绍了Spring中AOP的配置，这种配置要求切面类必须实现Spring的接口，代码与Spring的耦合性较高，配置比较繁琐。现在我们我们用 AspectJ 来实现注解配置，这种配置不需要任何实现任何接口，普通POJO类就行，而且看起来更简洁。注解这种声明式编程最适合我这种厌恶配置文件的。</p>
+<p>第一个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NaiveWaiter</span> <span class="keyword">implements</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">greetTo</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"greet to "</span>+name+<span class="string">"..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serveTo</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"serving "</span>+name+<span class="string">"..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PreGreetingAspect</span> </span>&#123;</span><br><span class="line">    <span class="comment">//这一点东西包含了，方位，切点，增强逻辑。</span></span><br><span class="line">    <span class="meta">@Before</span>(<span class="string">"execution(* greetTo(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeGreeting</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"aspect 前"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//我们来测试一下</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//创建AspectJ代理工厂</span></span><br><span class="line">        AspectJProxyFactory factory = <span class="keyword">new</span> AspectJProxyFactory();</span><br><span class="line">        <span class="comment">//设置目标对象</span></span><br><span class="line">        factory.setTarget(<span class="keyword">new</span> NaiveWaiter());</span><br><span class="line">        <span class="comment">//设置切面</span></span><br><span class="line">        factory.addAspect(PreGreetingAspect.class);</span><br><span class="line">        <span class="comment">//生成代理</span></span><br><span class="line">        Waiter proxy = factory.getProxy();</span><br><span class="line">        proxy.serveTo(<span class="string">"aspect name"</span>);</span><br><span class="line">        proxy.greetTo(<span class="string">"aspect name"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">serving aspect name...</span><br><span class="line">aspect 前</span><br><span class="line">greet to aspect name...</span><br></pre></td></tr></table></figure>
+
+<p>以上我们手动使用ApsectJ创建的，我们来用 Spring 自动配置一下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"naiveWater"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.NaiveWaiter"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.PreGreetingAspect"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--自动识别容器中含有@ApsectJ注解的bean，然后织入到符合条件的bean中--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Waiter waiter = context.getBean(<span class="string">"naiveWaiter"</span>, Waiter.class);</span><br><span class="line">    waiter.greetTo(<span class="string">"wo"</span>);</span><br><span class="line">    waiter.serveTo(<span class="string">"wo"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">aspect 前</span><br><span class="line">greet to wo...</span><br><span class="line">serving wo...</span><br></pre></td></tr></table></figure>
+
+<p>或者使用 aop 命名空间</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"naiveWaiter"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.PreGreetingAspect"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--这样, 那么长的类名也省了--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>ApsectJ 的切点表达式函数</p>
+<p>对方法的切点表达式函数有</p>
+<ol>
+<li><p>execution ( 参数 … ) ，参数按顺序有：修饰符 ( 可选 ) ，返回类型，方法名，参数，异常 ( 可选 ) 。方法名可以使用类名+方法名，也可以只是用方法名，如上面的切点函数就只是用了方法名。</p>
+<p>示例 : </p>
+<p>execution (* com.threewater.Waiter.*(..)) : 匹配Waiter的所有方法，子类也行。</p>
+<p>execution (* com.threewater.Waiter+.*(..)) ：匹配Waiter实现类或者子类的所有方法，没有在Waiter中声明的方法也匹配。</p>
+<p>execution (* com.threewater.*(..)) 匹配threewater包下的所有方法。</p>
+<p>execution (* com.threewater..*(..)) 匹配threewater及子孙包下所有方法。</p>
+<p>execution (* com.threewater..<em>.get\</em>(..)) 匹配threewater及子孙包下所有get开始方法。</p>
+<p>exceution (* get(String,int)) ：匹配get方法，并且方法声明的参数类型为String，int。</p>
+<p>exceution (* get(String,*)) ：第二个方法声明的参数类型可以式任意的。</p>
+<p>exceution (* get(String ,..)) : 第二个可以有多个，也可以没有。</p>
+<p>exceution (* get(com.threewater.Waiter+)) : 方法声明的参数类型为Waiter或的子类,不再java.lang 包下也不是和切面类同一包下使用全限定名。</p>
+<p>以上方法参数是针对方法声明的，而不是实际运行时传入的参数。</p>
+</li>
+</ol>
+<ol start="2">
+<li>@annotation(参数) ：参数为注解类型，匹配某个方法上是否标注了某个注解。</li>
+</ol>
+<p>对运行时入参的类型判断函数有</p>
+<ol>
+<li>args(参数) ：参数为运行时入参的类型名，或子类型，也就是说不管它的方法声明是什么样，只要这个方法的在运行时入参是当前类型，或其子类就行。</li>
+<li>@args(参数) ：参数为注解，这个参数必须注到方法声明参数的子类上。</li>
+</ol>
+<p>对类进行判断的函数有：</p>
+<ol>
+<li><p>within(参数) ：参数为匹配字串，</p>
+<p>示例：within(com.threewater.NaiveWaiter) 匹配 NavieWaiter，如果是接口将没有任何作用，如果是接口，可以用target() 。</p>
+<p>within(com.threewater.*) 匹配threewater包下所有类。</p>
+<p>within(com.threewater.*Dao) 匹配所有以Dao结尾的类。</p>
+</li>
+<li><p>target(参数)：参数为类名</p>
+<p>示例：target(com.threewater.Waiter) 匹配Waiter所有实现类，以及Waiter本身。</p>
+</li>
+<li><p>@witthin(参数) ：参数为注解类型</p>
+<p>示例：@within(com.threewater.MyAnnotation) : 标注了这个注解的类，以及其子类都匹配，尽管子类并没有这个注解。</p>
+</li>
+<li><p>@target(参数) ：参数为注解</p>
+<p>示例：@target(com.threewater.MyAnnotation) ：只有标注了这个注解的类匹配，子类不匹配。</p>
+</li>
+</ol>
+<p>切点函数之间可以进行符合运算，如 ||，！，&amp;&amp;。</p>
+<p>切点也可以被命名，使用@Pointcut进行命名，使用类名.方法名进行引用。</p>
+<p>获取被增强方法的入参：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NaiveWaiter</span> <span class="keyword">implements</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">get</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PreGreetingAspect</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Before</span>(<span class="string">"target(NaiveWaiter) &amp;&amp; args(name,age)"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getArgs</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">        System.out.println(name);</span><br><span class="line">        System.out.println(age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        NaiveWaiter waiter = context.getBean(<span class="string">"naiveWaiter"</span>, NaiveWaiter.class);</span><br><span class="line">        waiter.greetTo(<span class="string">"wo"</span>);</span><br><span class="line">        waiter.serveTo(<span class="string">"wo"</span>);</span><br><span class="line">        waiter.get(<span class="string">"11"</span>,<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"naiveWaiter"</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.NaiveWaiter"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.threewater.aopconfig.aspectj.PreGreetingAspect"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">proxy-target-class</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">11</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>获取被增强方法的返回值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NaiveWaiter</span> <span class="keyword">implements</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">get2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"get2"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PreGreetingAspect</span> </span>&#123;</span><br><span class="line">    <span class="comment">//匹配NaiveWaiter所有返回值为String类型的方法</span></span><br><span class="line">	<span class="meta">@AfterReturning</span>(value = <span class="string">"target(NaiveWaiter)"</span>,returning = <span class="string">"returnStr"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getReturn</span><span class="params">(String returnStr)</span></span>&#123;</span><br><span class="line">        System.out.println(returnStr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"> 	 <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        NaiveWaiter waiter = context.getBean(<span class="string">"naiveWaiter"</span>, NaiveWaiter.class);</span><br><span class="line">        waiter.get(<span class="string">"11"</span>,<span class="number">1</span>);</span><br><span class="line">        waiter.get2();</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">11</span><br><span class="line">get2</span><br></pre></td></tr></table></figure>
+
+<p>获取被增强方法抛出的异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NaiveWaiter</span> <span class="keyword">implements</span> <span class="title">Waiter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">expMethod</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"gg"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PreGreetingAspect</span> </span>&#123;</span><br><span class="line">    <span class="meta">@AfterThrowing</span>(value = <span class="string">"target(NaiveWaiter)"</span>,throwing = <span class="string">"ilse"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getExp</span><span class="params">(IllegalStateException ilse)</span></span>&#123;</span><br><span class="line">        System.out.println(ilse.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        NaiveWaiter waiter = context.getBean(<span class="string">"naiveWaiter"</span>, NaiveWaiter.class);</span><br><span class="line">        waiter.expMethod();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gg</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.IllegalStateException: gg</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，先对异常进行了处理，然后再抛出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/04/09/flyweight/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/04/12/proxy-1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

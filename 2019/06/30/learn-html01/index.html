@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>CSS的一些小知识点 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="CSS,">
+  
+
+  <meta name="description" content="通用样式处理123456789input&amp;#123;    outline: none;    border: 0;&amp;#125;ul&amp;#123;    list-style: none;    padding-left: 0;    margin: 0;&amp;#125;  margin-top可能会有的BUG如果子元素使用了marggin-top 父元素要用overflow:hidden 让div基于">
+<meta name="keywords" content="CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS的一些小知识点">
+<meta property="og:url" content="https://threewater.xyz/2019/06/30/learn-html01/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="通用样式处理123456789input&amp;#123;    outline: none;    border: 0;&amp;#125;ul&amp;#123;    list-style: none;    padding-left: 0;    margin: 0;&amp;#125;  margin-top可能会有的BUG如果子元素使用了marggin-top 父元素要用overflow:hidden 让div基于">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-30T01:52:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS的一些小知识点">
+<meta name="twitter:description" content="通用样式处理123456789input&amp;#123;    outline: none;    border: 0;&amp;#125;ul&amp;#123;    list-style: none;    padding-left: 0;    margin: 0;&amp;#125;  margin-top可能会有的BUG如果子元素使用了marggin-top 父元素要用overflow:hidden 让div基于">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#通用样式处理"><span class="toc-text">通用样式处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#margin-top可能会有的BUG"><span class="toc-text">margin-top可能会有的BUG</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#让div基于浏览器正中央"><span class="toc-text">让div基于浏览器正中央</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消除浮动对其它元素的影响"><span class="toc-text">消除浮动对其它元素的影响</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#图文环绕，或者要求组件定格于img标签"><span class="toc-text">图文环绕，或者要求组件定格于img标签</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#让颜色变透明"><span class="toc-text">让颜色变透明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#背景图的一些设置"><span class="toc-text">背景图的一些设置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移动文字位置"><span class="toc-text">移动文字位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文字居中"><span class="toc-text">文字居中</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隔断条的设置"><span class="toc-text">隔断条的设置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如果设置了margin或者border那么height或者width要减"><span class="toc-text">如果设置了margin或者border那么height或者width要减</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#定位"><span class="toc-text">定位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#透明"><span class="toc-text">透明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#transition"><span class="toc-text">transition</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Block"><span class="toc-text">Block</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inline"><span class="toc-text">Inline</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inline-Block"><span class="toc-text">Inline Block</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#元素类型转换"><span class="toc-text">元素类型转换</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-learn-html01" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CSS的一些小知识点</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.06.30</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="通用样式处理"><a href="#通用样式处理" class="headerlink" title="通用样式处理"></a>通用样式处理</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">input</span>&#123;</span><br><span class="line">    <span class="attribute">outline</span>: none;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">ul</span>&#123;</span><br><span class="line">    <span class="attribute">list-style</span>: none;</span><br><span class="line">    <span class="attribute">padding-left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="margin-top可能会有的BUG"><a href="#margin-top可能会有的BUG" class="headerlink" title="margin-top可能会有的BUG"></a>margin-top可能会有的BUG</h1><p>如果子元素使用了marggin-top 父元素要用overflow:hidden</p>
+<h1 id="让div基于浏览器正中央"><a href="#让div基于浏览器正中央" class="headerlink" title="让div基于浏览器正中央"></a>让div基于浏览器正中央</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">    <span class="attribute">right</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">left</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">top</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">bottom</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">position</span>:absolute;</span><br><span class="line">    <span class="attribute">margin</span>:auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="消除浮动对其它元素的影响"><a href="#消除浮动对其它元素的影响" class="headerlink" title="消除浮动对其它元素的影响"></a>消除浮动对其它元素的影响</h1><ol>
+<li>给父元素设置高度<br>2 .给父元素设置万能清除法<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clear</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">    <span class="attribute">content</span>:<span class="string">""</span>,</span><br><span class="line">    display:block;</span><br><span class="line">    <span class="attribute">clear</span>:both;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">overflow</span>:hidden;</span><br><span class="line">    <span class="attribute">visibility</span>:hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.clear</span>&#123;</span><br><span class="line">    <span class="attribute">zoom</span>:<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="图文环绕，或者要求组件定格于img标签"><a href="#图文环绕，或者要求组件定格于img标签" class="headerlink" title="图文环绕，或者要求组件定格于img标签"></a>图文环绕，或者要求组件定格于img标签</h1><p>给img加浮动,后面的元素对顶左上格</p>
+<h1 id="让颜色变透明"><a href="#让颜色变透明" class="headerlink" title="让颜色变透明"></a>让颜色变透明</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">    rgba(255,255,255,0.4)\*透明度为40%*\</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="背景图的一些设置"><a href="#背景图的一些设置" class="headerlink" title="背景图的一些设置"></a>背景图的一些设置</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">    <span class="comment">/* 图片基于正中央 */</span></span><br><span class="line">    <span class="attribute">background-position</span>:center;</span><br><span class="line">    <span class="comment">/* 图片充满整个盒子 */</span></span><br><span class="line">    <span class="attribute">background-size</span>:cover;</span><br><span class="line">    <span class="comment">/* 图片不随页面滚动 */</span></span><br><span class="line">    <span class="attribute">background-attachment</span>:fixed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="移动文字位置"><a href="#移动文字位置" class="headerlink" title="移动文字位置"></a>移动文字位置</h1><p><code>text-indent</code></p>
+<h1 id="文字居中"><a href="#文字居中" class="headerlink" title="文字居中"></a>文字居中</h1><p><code>line-height</code></p>
+<h1 id="隔断条的设置"><a href="#隔断条的设置" class="headerlink" title="隔断条的设置"></a>隔断条的设置</h1><p><code>background：url no-repeat right center</code></p>
+<p>#图片像左无限延申</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span>&#123;</span><br><span class="line">    <span class="comment">/* 对于没有设置宽度的div，他就会根据div的大小自动拉伸 */</span></span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="如果设置了margin或者border那么height或者width要减"><a href="#如果设置了margin或者border那么height或者width要减" class="headerlink" title="如果设置了margin或者border那么height或者width要减"></a>如果设置了margin或者border那么height或者width要减</h1><p>测量的话把border也测进去，先把布局画出来，后期再减去</p>
+<p>#字体大小<br>font-weight：500<br>不能带单位<br>字体有默认的上下空白<br>所以我们在设置边距的时候应该少设一点  </p>
+<h1 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h1><p>一般我们可以用marigin 或者padding实现<br>但是如果mairign很长，那么就不适合，<br>还有比如如果不知道设置多少，可以以用position</p>
+<p>如果父元素没有设置定位，那么子元素相对于浏览器进行定位</p>
+<p>相对定位没啥作用，一般是和绝对定位使用<br>marigin是在同一层的，而position是在不同层的<br>定位的层次是按html标签排列的顺序决定的，越后面的元素，越在上层</p>
+<h1 id="透明"><a href="#透明" class="headerlink" title="透明"></a>透明</h1><p>opacity<br>rgba</p>
+<h1 id="transition"><a href="#transition" class="headerlink" title="transition"></a>transition</h1><p>适用于所有连续变化的属性，不连续变化的没用<br>也就说这个属性设在那个标签上，如果这个标签有瞬间变化，他就会把他转成连续变化</p>
+<p>#overflows:hidden<br>只要父，祖父元素设置了这个，任何超出的部分都会被隐藏</p>
+<p>#hover属性的深度理解<br>父元素的范围会包括子元素</p>
+<h1 id="Block"><a href="#Block" class="headerlink" title="Block"></a>Block</h1><ol>
+<li>有margin 和 padding 四边都有。</li>
+<li>独占一行</li>
+</ol>
+<h1 id="Inline"><a href="#Inline" class="headerlink" title="Inline"></a>Inline</h1><ol>
+<li>width，height无效，由内容大小决定。</li>
+<li>margin padding 左右有效，上下无效</li>
+</ol>
+<h1 id="Inline-Block"><a href="#Inline-Block" class="headerlink" title="Inline Block"></a>Inline Block</h1><p>例如 img input标签<br>属于Inline元素下</p>
+<p>两个Inline Block 标签在一起时 中间会有缝隙<br>第一个元素加float：left</p>
+<p>CSS样式会影响标签的元素类型</p>
+<h1 id="元素类型转换"><a href="#元素类型转换" class="headerlink" title="元素类型转换"></a>元素类型转换</h1><p>这个是有需求的，因为标签代表功能，如果这个标签不能满足CSS需求的话<br>就要进行转换<br>例如：a inline—-&gt;inline block</p>
+<p>#图片水平垂直居中<br>父元素 设置<br>text-algin=center；<br>line-height：同样高度。按理说这样就可以水平垂直居中了，但是不够精确<br>子元素 设置<br>vertical-align：middle；使垂直居中更精确，只对iline-block有用</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/04/24/spring-cache/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/07/01/nginx-config/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

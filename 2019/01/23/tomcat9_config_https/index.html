@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>tomcat9配置HTTPS | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="配置,">
+  
+
+  <meta name="description" content="tomcat9.0.8实现https1.获取SSL证书这个就不多说了，直接去阿里云弄一个免费的 2.下载证书下载tomcat的 3.把pfx文件转成jks文件这个可以用jdk/bin目录下的keytool文件来生成不多说了，注意：新的jks文件密钥最好和pfx文件的密钥一致，这个密钥就是你下载压缩包中的密码 4.重点，配置tomcat的server.xml文件取消&amp;lt;Connector por">
+<meta name="keywords" content="配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat9配置HTTPS">
+<meta property="og:url" content="https://threewater.xyz/2019/01/23/tomcat9_config_https/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="tomcat9.0.8实现https1.获取SSL证书这个就不多说了，直接去阿里云弄一个免费的 2.下载证书下载tomcat的 3.把pfx文件转成jks文件这个可以用jdk/bin目录下的keytool文件来生成不多说了，注意：新的jks文件密钥最好和pfx文件的密钥一致，这个密钥就是你下载压缩包中的密码 4.重点，配置tomcat的server.xml文件取消&amp;lt;Connector por">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-23T12:55:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat9配置HTTPS">
+<meta name="twitter:description" content="tomcat9.0.8实现https1.获取SSL证书这个就不多说了，直接去阿里云弄一个免费的 2.下载证书下载tomcat的 3.把pfx文件转成jks文件这个可以用jdk/bin目录下的keytool文件来生成不多说了，注意：新的jks文件密钥最好和pfx文件的密钥一致，这个密钥就是你下载压缩包中的密码 4.重点，配置tomcat的server.xml文件取消&amp;lt;Connector por">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#tomcat9-0-8实现https"><span class="toc-text">tomcat9.0.8实现https</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-获取SSL证书"><span class="toc-text">1.获取SSL证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-下载证书"><span class="toc-text">2.下载证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-把pfx文件转成jks文件"><span class="toc-text">3.把pfx文件转成jks文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-重点，配置tomcat的server-xml文件"><span class="toc-text">4.重点，配置tomcat的server.xml文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其它"><span class="toc-text">其它</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#各个证书文件的解释"><span class="toc-text">各个证书文件的解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证书是对域名有效的"><span class="toc-text">证书是对域名有效的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#出现问题怎么办"><span class="toc-text">出现问题怎么办</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-tomcat9_config_https" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">tomcat9配置HTTPS</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.01.23</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/服务器/">服务器</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="tomcat9-0-8实现https"><a href="#tomcat9-0-8实现https" class="headerlink" title="tomcat9.0.8实现https"></a>tomcat9.0.8实现https</h1><h2 id="1-获取SSL证书"><a href="#1-获取SSL证书" class="headerlink" title="1.获取SSL证书"></a>1.获取SSL证书</h2><p>这个就不多说了，直接去阿里云弄一个免费的</p>
+<h2 id="2-下载证书"><a href="#2-下载证书" class="headerlink" title="2.下载证书"></a>2.下载证书</h2><p>下载tomcat的</p>
+<h2 id="3-把pfx文件转成jks文件"><a href="#3-把pfx文件转成jks文件" class="headerlink" title="3.把pfx文件转成jks文件"></a>3.把pfx文件转成jks文件</h2><p>这个可以用jdk/bin目录下的keytool文件来生成<br>不多说了，注意：新的jks文件密钥最好和pfx文件的密钥一致，这个密钥就是你下载压缩包中的密码</p>
+<h2 id="4-重点，配置tomcat的server-xml文件"><a href="#4-重点，配置tomcat的server-xml文件" class="headerlink" title="4.重点，配置tomcat的server.xml文件"></a>4.重点，配置tomcat的server.xml文件</h2><p>取消<code>&lt;Connector port=8443标签</code>注释，然后删除它，不要犹豫！把这个标签改成如下格式</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8443"</span> <span class="attr">protocol</span>=<span class="string">"org.apache.coyote.http11.Http11NioProtocol"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">maxThreads</span>=<span class="string">"150"</span> <span class="attr">SSLEnabled</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">compression</span>=<span class="string">"on"</span> <span class="attr">scheme</span>=<span class="string">"https"</span> <span class="attr">secure</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">keystoreFile</span>=<span class="string">"conf/a.jks"</span> # 你的<span class="attr">jks</span>文件路径，和<span class="attr">server.xml</span>在同一目录下</span></span><br><span class="line"><span class="tag">              <span class="attr">keystorePass</span>=<span class="string">"下载后压缩包里面的密码"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">SSLVerifyClient</span>=<span class="string">"none"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">SSLProtocol</span>=<span class="string">"TLSv1.2"</span></span></span><br><span class="line"><span class="tag">   /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;Connector post=80</code>标签加上redirect属性，如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><h3 id="各个证书文件的解释"><a href="#各个证书文件的解释" class="headerlink" title="各个证书文件的解释"></a>各个证书文件的解释</h3><p>一般，证书有很多种格式，如pfx，cert，crt什么的，它们都是用来存放证书信息的<br>其实他们有一个统一的名称叫<code>keystore</code>。它们是可以相互转换的，转换工具有java的keytool</p>
+<h3 id="证书是对域名有效的"><a href="#证书是对域名有效的" class="headerlink" title="证书是对域名有效的"></a>证书是对域名有效的</h3><p>如果你在本地配置好了，然后测试，chrome提示这不是安全连接，说明你已经配置好了。<br>为什么会提示不安全连接，因为你的域名是localhost，而不是你的域名。部署到服务器就好了。</p>
+<h3 id="出现问题怎么办"><a href="#出现问题怎么办" class="headerlink" title="出现问题怎么办"></a>出现问题怎么办</h3><p>查看tomcat log文件，google</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href>https原理</a>,<a href>域名解析原理</a></p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="hide pull-left" href="/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/01/23/linux-app-install/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>TreeMap源码分析 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="HashMap是无序的，LinkedHashMap是按插入有序的，他们的读取效率都非常高，根据键找到值的时间复杂度为O(1)，但是他们的遍历输出对于键来说都是无序的。而TreeMap很好的解决了这个痛点，TreeMap内部采用的是二叉排序树，用红黑树保持平衡。添加的时间复杂度为O(n/2)，删除的时间复杂度为O(n/2)，遍历的时间复杂度为O(n/2)。 构造方法很简单。 添加方法： map为空，">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TreeMap源码分析">
+<meta property="og:url" content="https://threewater.xyz/2019/02/27/TreeMap/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="HashMap是无序的，LinkedHashMap是按插入有序的，他们的读取效率都非常高，根据键找到值的时间复杂度为O(1)，但是他们的遍历输出对于键来说都是无序的。而TreeMap很好的解决了这个痛点，TreeMap内部采用的是二叉排序树，用红黑树保持平衡。添加的时间复杂度为O(n/2)，删除的时间复杂度为O(n/2)，遍历的时间复杂度为O(n/2)。 构造方法很简单。 添加方法： map为空，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-27T13:04:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TreeMap源码分析">
+<meta name="twitter:description" content="HashMap是无序的，LinkedHashMap是按插入有序的，他们的读取效率都非常高，根据键找到值的时间复杂度为O(1)，但是他们的遍历输出对于键来说都是无序的。而TreeMap很好的解决了这个痛点，TreeMap内部采用的是二叉排序树，用红黑树保持平衡。添加的时间复杂度为O(n/2)，删除的时间复杂度为O(n/2)，遍历的时间复杂度为O(n/2)。 构造方法很简单。 添加方法： map为空，">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-TreeMap" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">TreeMap源码分析</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.27</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>HashMap是无序的，LinkedHashMap是按插入有序的，他们的读取效率都非常高，根据键找到值的时间复杂度为O(1)，但是他们的遍历输出对于键来说都是无序的。而TreeMap很好的解决了这个痛点，TreeMap内部采用的是二叉排序树，用红黑树保持平衡。添加的时间复杂度为O(n/2)，删除的时间复杂度为O(n/2)，遍历的时间复杂度为O(n/2)。</p>
+<p>构造方法很简单。</p>
+<p>添加方法：</p>
+<p>map为空，就初始化。</p>
+<p>不为空，就找父亲，然后看看比父亲大，还是小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    Entry&lt;K,V&gt; t = root;</span><br><span class="line">    <span class="comment">//map为空，初始化</span></span><br><span class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123;</span><br><span class="line">        compare(key, key); <span class="comment">// type (and possibly null) check</span></span><br><span class="line"></span><br><span class="line">        root = <span class="keyword">new</span> Entry&lt;&gt;(key, value, <span class="keyword">null</span>);</span><br><span class="line">        size = <span class="number">1</span>;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> cmp;</span><br><span class="line">    Entry&lt;K,V&gt; parent;</span><br><span class="line">    <span class="comment">// split comparator and comparable paths</span></span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</span><br><span class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//默认构造方法comparator为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//找父亲，t为探针</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            parent = t;</span><br><span class="line">            cmp = k.compareTo(t.key);</span><br><span class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">                t = t.left;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">                t = t.right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> t.setValue(value);</span><br><span class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Entry&lt;K,V&gt; e = <span class="keyword">new</span> Entry&lt;&gt;(key, value, parent);</span><br><span class="line">    <span class="comment">//看看比父亲大还是小</span></span><br><span class="line">    <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">        parent.left = e;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        parent.right = e;</span><br><span class="line">    <span class="comment">//红黑树调整</span></span><br><span class="line">    fixAfterInsertion(e);</span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除方法：</p>
+<p>如果他有两个孩子，则找后继，找到的后继没有左孩，所以replacement赋值会赋值为后继的右子树。</p>
+<p>然后要删除这个后继。就变成了只有右孩的情况。</p>
+<p>总之，先把有两个孩子的情况，转变为一个孩子，然后进行处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">deleteEntry</span><span class="params">(Entry&lt;K,V&gt; p)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//如果只有一个孩子，则这部分代码不执行</span></span><br><span class="line">    <span class="keyword">if</span> (p.left != <span class="keyword">null</span> &amp;&amp; p.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Entry&lt;K,V&gt; s = successor(p);</span><br><span class="line">        p.key = s.key;</span><br><span class="line">        p.value = s.value;</span><br><span class="line">        p = s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//repalcement表示要拼接的部分</span></span><br><span class="line">    <span class="comment">//如果左孩为空，则replacement等于右孩</span></span><br><span class="line">    <span class="comment">//如果左孩不为空，则replacement等于左孩</span></span><br><span class="line">    Entry&lt;K,V&gt; replacement = (p.left != <span class="keyword">null</span> ? p.left : p.right);</span><br><span class="line">	<span class="comment">//表明左孩或者右孩不为空，要把repalcement拼接到parent上</span></span><br><span class="line">    <span class="keyword">if</span> (replacement != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// Link replacement to parent</span></span><br><span class="line">        replacement.parent = p.parent;</span><br><span class="line">        <span class="keyword">if</span> (p.parent == <span class="keyword">null</span>)</span><br><span class="line">            root = replacement;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (p == p.parent.left)</span><br><span class="line">            p.parent.left  = replacement;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            p.parent.right = replacement;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Null out links so they are OK to use by fixAfterDeletion.</span></span><br><span class="line">        p.left = p.right = p.parent = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Fix replacement</span></span><br><span class="line">        <span class="keyword">if</span> (p.color == BLACK)</span><br><span class="line">            fixAfterDeletion(replacement);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (p.parent == <span class="keyword">null</span>) &#123; <span class="comment">// return if we are the only node.</span></span><br><span class="line">        root = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//右孩为空，由于前面左孩也为空。所以可以直接删除</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//  No children. Use self as phantom replacement and unlink.</span></span><br><span class="line">        <span class="keyword">if</span> (p.color == BLACK)</span><br><span class="line">            fixAfterDeletion(p);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (p.parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p == p.parent.left)</span><br><span class="line">                p.parent.left = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p == p.parent.right)</span><br><span class="line">                p.parent.right = <span class="keyword">null</span>;</span><br><span class="line">            p.parent = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>找后继节点：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &lt;K,V&gt; TreeMap.<span class="function">Entry&lt;K,V&gt; <span class="title">successor</span><span class="params">(Entry&lt;K,V&gt; t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//map为空</span></span><br><span class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//右子树不为空，找右子树中最左的节点</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (t.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Entry&lt;K,V&gt; p = t.right;</span><br><span class="line">        <span class="keyword">while</span> (p.left != <span class="keyword">null</span>)</span><br><span class="line">            p = p.left;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//右子树为空，找父节点，知道父节点为空或者ch是父节点的左孩子。为止。</span></span><br><span class="line">        <span class="comment">//为空表示，已经是最大。返回null</span></span><br><span class="line">        Entry&lt;K,V&gt; p = t.parent;</span><br><span class="line">        Entry&lt;K,V&gt; ch = t;</span><br><span class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span> &amp;&amp; ch == p.right) &#123;</span><br><span class="line">            ch = p;</span><br><span class="line">            p = p.parent;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/26/linkedHashMap/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/27/factory/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

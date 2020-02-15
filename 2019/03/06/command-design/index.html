@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>命令设计模式 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="ICommand： 接口 命令这一名词的抽象，所有具体的命令都必须继承它 实体：命令接收者，负责接收命令，并执行具体操作 发送者：或者说具体命令。负责发送某个具体的命令给实体，因此它应该实现ICommand接口 管理器：负责管理所有的命令，支持添加多个命令。  12345678910111213141516171819202122232425262728293031323334353637383">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令设计模式">
+<meta property="og:url" content="https://threewater.xyz/2019/03/06/command-design/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="ICommand： 接口 命令这一名词的抽象，所有具体的命令都必须继承它 实体：命令接收者，负责接收命令，并执行具体操作 发送者：或者说具体命令。负责发送某个具体的命令给实体，因此它应该实现ICommand接口 管理器：负责管理所有的命令，支持添加多个命令。  12345678910111213141516171819202122232425262728293031323334353637383">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-08T05:40:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="命令设计模式">
+<meta name="twitter:description" content="ICommand： 接口 命令这一名词的抽象，所有具体的命令都必须继承它 实体：命令接收者，负责接收命令，并执行具体操作 发送者：或者说具体命令。负责发送某个具体的命令给实体，因此它应该实现ICommand接口 管理器：负责管理所有的命令，支持添加多个命令。  12345678910111213141516171819202122232425262728293031323334353637383">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-command-design" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">命令设计模式</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.06</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <ol>
+<li>ICommand： 接口 命令这一名词的抽象，所有具体的命令都必须继承它</li>
+<li>实体：命令接收者，负责接收命令，并执行具体操作</li>
+<li>发送者：或者说具体命令。负责发送某个具体的命令给实体，因此它应该实现ICommand接口</li>
+<li>管理器：负责管理所有的命令，支持添加多个命令。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//实体 风扇</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ElectricFan</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lowSpeed</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"低速运转"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">highSpeed</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"高速运转"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mediumSpeed</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"中速运转"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trunOff</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"电扇关闭"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trunOn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"电扇打开"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体命令1 ，命令发送者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteHighSpeedCommand</span> <span class="keyword">implements</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ElectricFan fan;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteHighSpeedCommand</span><span class="params">(ElectricFan fan)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.fan = fan;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        fan.highSpeed();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体命令2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteLowSpeedCommand</span> <span class="keyword">implements</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ElectricFan fan;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteLowSpeedCommand</span><span class="params">(ElectricFan fan)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.fan = fan;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        fan.lowSpeed();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体命令3</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretemediumSpeedCommand</span> <span class="keyword">implements</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ElectricFan fan;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcretemediumSpeedCommand</span><span class="params">(ElectricFan fan)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.fan = fan;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        fan.mediumSpeed();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体命令4</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteOffCommand</span> <span class="keyword">implements</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ElectricFan fan;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteOffCommand</span><span class="params">(ElectricFan fan)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.fan = fan;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        fan.trunOff();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体命令5</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteOnCommand</span> <span class="keyword">implements</span> <span class="title">ICommand</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ElectricFan fan;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteOnCommand</span><span class="params">(ElectricFan fan)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.fan = fan;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        fan.trunOn();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//管理器，管理所命令，提供统一使用方法。</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteControl</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String,ICommand&gt; commandMap=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCommand</span><span class="params">(String option, ICommand command)</span></span>&#123;</span><br><span class="line">        commandMap.put(option,command);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(String option)</span></span>&#123;</span><br><span class="line">        ICommand command = commandMap.get(option);</span><br><span class="line">        <span class="keyword">if</span>(command==<span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"no such option"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        command.execute();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ElectricFan electricFan = <span class="keyword">new</span> ElectricFan();</span><br><span class="line">        ICommand highSpeedCommand=<span class="keyword">new</span> ConcreteHighSpeedCommand(electricFan);</span><br><span class="line">        ICommand mediumSpeedCommand = <span class="keyword">new</span> ConcretemediumSpeedCommand(electricFan);</span><br><span class="line">        ICommand lowSpeedCommand=<span class="keyword">new</span> ConcreteLowSpeedCommand(electricFan);</span><br><span class="line">        ICommand offCommand=<span class="keyword">new</span> ConcreteOffCommand(electricFan);</span><br><span class="line">        ICommand onCommand=<span class="keyword">new</span> ConcreteOnCommand(electricFan);</span><br><span class="line">        RemoteControl control = <span class="keyword">new</span> RemoteControl();</span><br><span class="line">        control.addCommand(<span class="string">"high"</span>,highSpeedCommand);</span><br><span class="line">        control.addCommand(<span class="string">"medium"</span>,mediumSpeedCommand);</span><br><span class="line">        control.addCommand(<span class="string">"low"</span>,lowSpeedCommand);</span><br><span class="line">        control.addCommand(<span class="string">"off"</span>,offCommand);</span><br><span class="line">        control.addCommand(<span class="string">"on"</span>,onCommand);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遥控器测试</span></span><br><span class="line">        control.execute(<span class="string">"on"</span>);</span><br><span class="line">        control.execute(<span class="string">"high"</span>);</span><br><span class="line">        control.execute(<span class="string">"low"</span>);</span><br><span class="line">        control.execute(<span class="string">"medium"</span>);</span><br><span class="line">        control.execute(<span class="string">"off"</span>);</span><br><span class="line">        control.execute(<span class="string">"explode"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">电扇打开</span><br><span class="line">高速运转</span><br><span class="line">低速运转</span><br><span class="line">中速运转</span><br><span class="line">电扇关闭</span><br><span class="line">no such option</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/06/thread/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/07/juc-1/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

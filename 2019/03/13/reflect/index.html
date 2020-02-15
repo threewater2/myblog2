@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>反射基础 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="反射会破坏封装。发射可以破坏单例，如果是枚举实现的单例，反射也不能破坏。 123456789101112131415161718public class Student &amp;#123;    enum Grade&amp;#123;        GR,GD    &amp;#125;    public static void test3() throws Exception&amp;#123;        Const">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反射基础">
+<meta property="og:url" content="https://threewater.xyz/2019/03/13/reflect/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="反射会破坏封装。发射可以破坏单例，如果是枚举实现的单例，反射也不能破坏。 123456789101112131415161718public class Student &amp;#123;    enum Grade&amp;#123;        GR,GD    &amp;#125;    public static void test3() throws Exception&amp;#123;        Const">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-13T05:07:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="反射基础">
+<meta name="twitter:description" content="反射会破坏封装。发射可以破坏单例，如果是枚举实现的单例，反射也不能破坏。 123456789101112131415161718public class Student &amp;#123;    enum Grade&amp;#123;        GR,GD    &amp;#125;    public static void test3() throws Exception&amp;#123;        Const">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#类型检查和类型转换"><span class="toc-text">类型检查和类型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态创建数组"><span class="toc-text">动态创建数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用反射实现简单的序列化"><span class="toc-text">利用反射实现简单的序列化</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-reflect" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">反射基础</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.03.13</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>反射会破坏封装。发射可以破坏单例，如果是枚举实现的单例，反射也不能破坏。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">enum</span> Grade&#123;</span><br><span class="line">        GR,GD</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Constructor&lt;?&gt;[] con = Student.class.getDeclaredConstructors();</span><br><span class="line">        con[<span class="number">0</span>].setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//可以</span></span><br><span class="line">        Student student = (Student)con[<span class="number">0</span>].newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test4</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Constructor&lt;?&gt;[] constructors = Grade.class.getDeclaredConstructors();</span><br><span class="line">        constructors[<span class="number">0</span>].setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//抛出异常，不能通过反射创建枚举对象</span></span><br><span class="line">        Object o = constructors[<span class="number">0</span>].newInstance();</span><br><span class="line">        System.out.println(o.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="类型检查和类型转换"><a href="#类型检查和类型转换" class="headerlink" title="类型检查和类型转换"></a>类型检查和类型转换</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Object list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Class aClass = Class.forName(<span class="string">"java.util.ArrayList"</span>);</span><br><span class="line">    <span class="comment">//动态类型检查</span></span><br><span class="line">    <span class="keyword">if</span>(aClass.isInstance(list))&#123;</span><br><span class="line">        System.out.println(<span class="string">"yes"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList cast = cast(list, ArrayList.class);</span><br><span class="line">    System.out.println(cast==list);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//动态类型转换，类似于强转</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">cast</span><span class="params">(Object obj,Class&lt;T&gt; cls)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> cls.cast(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态创建数组"><a href="#动态创建数组" class="headerlink" title="动态创建数组"></a>动态创建数组</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过Array类动态创建数组</span></span><br><span class="line">Object obj = Array.newInstance(String.class, <span class="number">10</span>);</span><br><span class="line">System.out.println(obj.getClass().getSimpleName());</span><br><span class="line"><span class="comment">//动态设置数组值</span></span><br><span class="line">Array.set(obj,<span class="number">0</span>,<span class="string">"aaa"</span>);</span><br><span class="line">System.out.println(((Object[])obj)[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="利用反射实现简单的序列化"><a href="#利用反射实现简单的序列化" class="headerlink" title="利用反射实现简单的序列化"></a>利用反射实现简单的序列化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> prise;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isOld;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Book</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Book</span><span class="params">(String name, <span class="keyword">int</span> prise, <span class="keyword">boolean</span> isOld)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.prise = prise;</span><br><span class="line">        <span class="keyword">this</span>.isOld = isOld;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//get set ...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySerializaer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">toString</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> IllegalAccessException </span>&#123;</span><br><span class="line">        StringBuilder builder=<span class="keyword">new</span> StringBuilder();</span><br><span class="line">        Class&lt;?&gt; aClass = obj.getClass();</span><br><span class="line">        builder.append(aClass.getName()).append(<span class="string">","</span>);</span><br><span class="line">        <span class="keyword">for</span>(Field field:aClass.getDeclaredFields())&#123;</span><br><span class="line">            <span class="keyword">if</span>(!field.isAccessible()) field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            String name = field.getName();</span><br><span class="line">            Object value = field.get(obj);</span><br><span class="line">            builder.append(name).append(<span class="string">"="</span>).append(value.toString());</span><br><span class="line">            builder.append(<span class="string">","</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> builder.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">toObject</span><span class="params">(String str)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String[] split = str.split(<span class="string">","</span>);</span><br><span class="line">        Class&lt;?&gt; aClass = Class.forName(split[<span class="number">0</span>]);</span><br><span class="line">        Object obj = aClass.newInstance();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;split.length;i++)&#123;</span><br><span class="line">            String[] split1 = split[i].split(<span class="string">"="</span>);</span><br><span class="line">            Field field = aClass.getDeclaredField(split1[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">if</span>(!field.isAccessible()) field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            field.set(obj,prase(field.getType(),split1[<span class="number">1</span>]));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">prase</span><span class="params">(Class type,String str)</span></span>&#123;</span><br><span class="line">        Object obj=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(type==<span class="keyword">int</span>.class)&#123;</span><br><span class="line">            obj=Integer.parseInt(str);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(type==<span class="keyword">boolean</span>.class)&#123;</span><br><span class="line">            obj=Boolean.parseBoolean(str);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(type==String.class)&#123;</span><br><span class="line">            obj=str;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Book java = <span class="keyword">new</span> Book(<span class="string">"java"</span>, <span class="number">18</span>, <span class="keyword">true</span>);</span><br><span class="line">        String str=toString(java);</span><br><span class="line">        Book prase = (Book)toObject(str);</span><br><span class="line">        System.out.println(prase.getName());</span><br><span class="line">        System.out.println(prase.getPrise());</span><br><span class="line">        System.out.println(prase.isOld());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/03/12/memento/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/03/14/proxy/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

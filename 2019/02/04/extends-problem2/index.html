@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>类和对象在内存中的分布，以及加载过程 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="继承体系中类的加载过程当我们new一个对象时，大概会经历如下过程：  查看父类以及本类是否在方法区中，如不在，会先加载父类，然后加载本类。 如不在，为父类和子类的静态变量（默认值）和方法地址引用开辟内存。 先执行父类静态变量的赋值语句，执行静态代码块。然后执行子类的。 到此，类就加载完毕了，接下来创建对象。 先创建父类对象，再创建子类对象。 在堆内存中为对象开辟内存。 执行实例变量赋值语句，执行实">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类和对象在内存中的分布，以及加载过程">
+<meta property="og:url" content="https://threewater.xyz/2019/02/04/extends-problem2/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="继承体系中类的加载过程当我们new一个对象时，大概会经历如下过程：  查看父类以及本类是否在方法区中，如不在，会先加载父类，然后加载本类。 如不在，为父类和子类的静态变量（默认值）和方法地址引用开辟内存。 先执行父类静态变量的赋值语句，执行静态代码块。然后执行子类的。 到此，类就加载完毕了，接下来创建对象。 先创建父类对象，再创建子类对象。 在堆内存中为对象开辟内存。 执行实例变量赋值语句，执行实">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://threewater.xyz/2019/02/04/extends-problem2/uml.svg">
+<meta property="og:image" content="https://threewater.xyz/2019/02/04/extends-problem2/class.svg">
+<meta property="og:image" content="https://threewater.xyz/2019/02/04/extends-problem2/boject.svg">
+<meta property="og:updated_time" content="2019-02-04T15:14:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="类和对象在内存中的分布，以及加载过程">
+<meta name="twitter:description" content="继承体系中类的加载过程当我们new一个对象时，大概会经历如下过程：  查看父类以及本类是否在方法区中，如不在，会先加载父类，然后加载本类。 如不在，为父类和子类的静态变量（默认值）和方法地址引用开辟内存。 先执行父类静态变量的赋值语句，执行静态代码块。然后执行子类的。 到此，类就加载完毕了，接下来创建对象。 先创建父类对象，再创建子类对象。 在堆内存中为对象开辟内存。 执行实例变量赋值语句，执行实">
+<meta name="twitter:image" content="https://threewater.xyz/2019/02/04/extends-problem2/uml.svg">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承体系中类的加载过程"><span class="toc-text">继承体系中类的加载过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码实例："><span class="toc-text">代码实例：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类在内存中的体现"><span class="toc-text">类在内存中的体现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象在内存中的体现"><span class="toc-text">对象在内存中的体现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法调用过程"><span class="toc-text">方法调用过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量调用过程"><span class="toc-text">变量调用过程</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-extends-problem2" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">类和对象在内存中的分布，以及加载过程</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.04</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="继承体系中类的加载过程"><a href="#继承体系中类的加载过程" class="headerlink" title="继承体系中类的加载过程"></a>继承体系中类的加载过程</h2><p>当我们new一个对象时，大概会经历如下过程：</p>
+<ol>
+<li>查看父类以及本类是否在方法区中，如不在，会先加载父类，然后加载本类。</li>
+<li>如不在，为父类和子类的静态变量（默认值）和方法地址引用开辟内存。</li>
+<li>先执行父类静态变量的赋值语句，执行静态代码块。然后执行子类的。</li>
+<li>到此，类就加载完毕了，接下来创建对象。</li>
+<li>先创建父类对象，再创建子类对象。</li>
+<li>在堆内存中为对象开辟内存。</li>
+<li>执行实例变量赋值语句，执行实例初始化代码块，执行构造方法。</li>
+</ol>
+<h3 id="代码实例："><a href="#代码实例：" class="headerlink" title="代码实例："></a>代码实例：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> s;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Child</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"子类构造方法 a:"</span>+a);</span><br><span class="line">        a=<span class="number">21</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"子类静态代码块 s:"</span>+s);</span><br><span class="line">        s=<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">"子类实例代码块 a:"</span>+a);</span><br><span class="line">        a=<span class="number">20</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> s;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Parent</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"父类构造方法 a:"</span>+a);</span><br><span class="line">        a=<span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"父类静态代码块 s:"</span>+s);</span><br><span class="line">        s=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">"父类实例代码块 a:"</span>+a);</span><br><span class="line">        a=<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Execute</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"----- new child ------"</span>);</span><br><span class="line">        Child child = <span class="keyword">new</span> Child();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">----- new child ------</span><br><span class="line">父类静态代码块 s:0</span><br><span class="line">子类静态代码块 s:0</span><br><span class="line">父类实例代码块 a:0</span><br><span class="line">父类构造方法 a:2</span><br><span class="line">子类实例代码块 a:0</span><br><span class="line">子类构造方法 a:20</span><br></pre></td></tr></table></figure>
+
+<h2 id="类在内存中的体现"><a href="#类在内存中的体现" class="headerlink" title="类在内存中的体现"></a>类在内存中的体现</h2><p>我们先来看如下类图：</p>
+<img src="/2019/02/04/extends-problem2/uml.svg">
+<p>它在内存中可以表示为：</p>
+<img src="/2019/02/04/extends-problem2/class.svg">
+<p>其中：</p>
+<ol>
+<li>class_init()：静态代码块，静态变量时的赋值语句。</li>
+<li>instance_init()：实例变量的赋值语句，实例代码块，构造方法。</li>
+</ol>
+<h2 id="对象在内存中的体现"><a href="#对象在内存中的体现" class="headerlink" title="对象在内存中的体现"></a>对象在内存中的体现</h2><img src="/2019/02/04/extends-problem2/boject.svg">
+
+<p>可以看出，类在内存中只有一份，而对象可能有多份。<br>在向上转型后，p的地址和c是指向同一地方的。</p>
+<h2 id="方法调用过程"><a href="#方法调用过程" class="headerlink" title="方法调用过程"></a>方法调用过程</h2><ol>
+<li>静态方法：静态方法是静态绑定的，在编译时期就可确定。只取决于你所引用的变量类型。</li>
+<li>实例方法：从上面的图我们可以看到，无论引用类型是父类型还是子类型，它们都是指向同一对象的，那么在寻找实例方法的时候，会直接查看该对象的类型地址，然后一级一级往上找，直到找到该方法为止。</li>
+</ol>
+<h2 id="变量调用过程"><a href="#变量调用过程" class="headerlink" title="变量调用过程"></a>变量调用过程</h2><p>变量是静态绑定的，在编译期确定。取决于所引用的变量类型。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/02/02/extends-problem/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/02/12/random/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

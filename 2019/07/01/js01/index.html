@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>JS变量声明&amp;数据类型 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="一般我们推荐使用严格模式变量必须先声明后使用。声明变量的两种方式let：赋值后可以被改变，驼峰式命名法const：赋值后，不能被改变，大写，多个单词之间用_分割 let 和 var 的区别var的作用域只有两种，全局的和函数的，也就说它会冲出if，for等代码块的限制var的声明操作发生在，全局和函数开始之前，赋值发生在赋值语句处 1let a=b;  和Java一样，只是引用。 数据类型 num">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS变量声明&amp;数据类型">
+<meta property="og:url" content="https://threewater.xyz/2019/07/01/js01/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="一般我们推荐使用严格模式变量必须先声明后使用。声明变量的两种方式let：赋值后可以被改变，驼峰式命名法const：赋值后，不能被改变，大写，多个单词之间用_分割 let 和 var 的区别var的作用域只有两种，全局的和函数的，也就说它会冲出if，for等代码块的限制var的声明操作发生在，全局和函数开始之前，赋值发生在赋值语句处 1let a=b;  和Java一样，只是引用。 数据类型 num">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-01T13:39:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS变量声明&amp;数据类型">
+<meta name="twitter:description" content="一般我们推荐使用严格模式变量必须先声明后使用。声明变量的两种方式let：赋值后可以被改变，驼峰式命名法const：赋值后，不能被改变，大写，多个单词之间用_分割 let 和 var 的区别var的作用域只有两种，全局的和函数的，也就说它会冲出if，for等代码块的限制var的声明操作发生在，全局和函数开始之前，赋值发生在赋值语句处 1let a=b;  和Java一样，只是引用。 数据类型 num">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#let-和-var-的区别"><span class="toc-text">let 和 var 的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据类型"><span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#number转为String"><span class="toc-text">number转为String</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于小数"><span class="toc-text">关于小数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#String到Number的严格转换和松转换"><span class="toc-text">String到Number的严格转换和松转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符串"><span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#操作数"><span class="toc-text">操作数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#null"><span class="toc-text">+</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-text">*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-2"><span class="toc-text">=</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#，"><span class="toc-text">，</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-js01" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">JS变量声明&amp;数据类型</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.07.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>一般我们推荐使用<code>严格</code>模式<br>变量必须先声明后使用。<br>声明变量的两种方式<br>let：赋值后可以被改变，驼峰式命名法<br>const：赋值后，不能被改变，大写，多个单词之间用_分割</p>
+<h1 id="let-和-var-的区别"><a href="#let-和-var-的区别" class="headerlink" title="let 和 var 的区别"></a>let 和 var 的区别</h1><p>var的作用域只有两种，全局的和函数的，也就说它会冲出if，for等代码块的限制<br>var的声明操作发生在，全局和函数开始之前，赋值发生在赋值语句处</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a=b;</span><br></pre></td></tr></table></figure>
+
+<p>和Java一样，只是引用。</p>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><ol>
+<li>number类型：包括，整形，浮点，Infinity, -Infinity ，NaN<br>1/0 是无穷，计算错误或者未定义的数学运算返回NaN,你可以大胆的做数学运算<br>NaN不等于任何数</li>
+<li>string类型</li>
+<li>boolean类型</li>
+<li>null类型，null不是空指针，或者空引用，他就是字面意思，表示我也不知道这是什么</li>
+<li>undefined类型，这个就表示空指针或者空引用了，一般我们用来检查变量是否被分配。</li>
+<li>symbol 是object的UUID</li>
+<li>object 类型，function属于object类型，只不过typeof把它视为了function</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a=<span class="number">1e9</span>;<span class="comment">//1后面9个0</span></span><br><span class="line"><span class="keyword">let</span> b=<span class="number">7.3e10</span>;<span class="comment">//7.3*10个0</span></span><br><span class="line"><span class="keyword">let</span> c= <span class="number">1e-6</span>;</span><br><span class="line"><span class="comment">//他们都表示同一个数，他们是相等的</span></span><br><span class="line"><span class="keyword">let</span> d=<span class="number">0xFF</span>;<span class="comment">//16进制</span></span><br><span class="line"><span class="keyword">let</span> e = <span class="number">0b11111111</span>; <span class="comment">// 二进制</span></span><br><span class="line"><span class="keyword">let</span> f = <span class="number">0o377</span>; <span class="comment">// 八进制</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="number转为String"><a href="#number转为String" class="headerlink" title="number转为String"></a>number转为String</h1><p>每一个声明出来的变量都有<code>toString()</code>方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果变量的实际类型是number，那么</span></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">0xFF</span>;</span><br><span class="line"><span class="comment">// 用整形来存颜色，需要的时候转成字符串</span></span><br><span class="line"><span class="keyword">let</span> b=a.toString(<span class="number">16</span>);<span class="comment">//输出16进制字符串</span></span><br><span class="line"><span class="keyword">let</span> c=a.toString(<span class="number">2</span>);<span class="comment">//输出二进制字符串</span></span><br><span class="line"><span class="comment">// 数字直接调用toString</span></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">11.</span>.toString(<span class="number">2</span>);<span class="comment">//如果只有一个点，会被认为是小数部分</span></span><br><span class="line"><span class="comment">//也可以这样</span></span><br><span class="line"><span class="keyword">let</span> b=(<span class="number">1</span>).toString(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="关于小数"><a href="#关于小数" class="headerlink" title="关于小数"></a>关于小数</h1><p>小数是分数的一种表示形式。不如1/10，就是0.1。但是1/3是0.333…无限循环。<br>可见，如果存储容量有限我们是无法存储1/3这样的小数的，我们只能近似的存储它：0.333334。<br>这个问题在二进制中同样存在，表示的数总会大一点或者小一点，<br>这样如果两个不精确的数做运算，其结果必然是不精确的，这样他就不会等于理想结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">0.1</span>+<span class="number">0.2</span>==<span class="number">0.3</span>);<span class="comment">//</span></span><br></pre></td></tr></table></figure>
+
+<p>我们只能用<code>0.123213..toFixed(3)</code>这样精确到多少位的字符串表示<br>但是有些小数参加运算有问题，有些又不会，</p>
+<h1 id="String到Number的严格转换和松转换"><a href="#String到Number的严格转换和松转换" class="headerlink" title="String到Number的严格转换和松转换"></a>String到Number的严格转换和松转换</h1><ol>
+<li>严格转换：<code>+</code>，Number()</li>
+<li>松转换：parseInt(),parseFloat(),遇到不是数字就不会往后面读取了，如果第一个也不是数字，返回NaN</li>
+</ol>
+<h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a=<span class="string">"gg"</span>;</span><br><span class="line"><span class="keyword">let</span> b=<span class="string">'aa'</span>;</span><br><span class="line"><span class="keyword">let</span> c=<span class="string">`gg <span class="subst">$&#123;<span class="number">1</span>+<span class="number">2</span>&#125;</span>`</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="操作数"><a href="#操作数" class="headerlink" title="操作数"></a>操作数</h1><p>算术运算操作符会尝试把操作数转成number<br>逻辑运算操作符会尝试把操作数转成Boolean</p>
+<h2 id><a href="#" class="headerlink" title="+"></a>+</h2><ol>
+<li>一元加和Number()一样，把字符串转为number</li>
+<li>二元加，在没有遇到字符串时做算术运算，遇到字符串时做数学运算<h2 id="-1"><a href="#-1" class="headerlink" title="*"></a>*</h2><code>2**3</code>表示2的三次幂<h2 id="-2"><a href="#-2" class="headerlink" title="="></a>=</h2><code>=</code>会返回右边式子的结果<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">let</span> c = <span class="number">3</span> - (a = b + <span class="number">1</span>);<span class="comment">//c=0</span></span><br><span class="line"><span class="comment">//a=3</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="，"><a href="#，" class="headerlink" title="，"></a>，</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = (<span class="number">1</span> + <span class="number">2</span>, <span class="number">3</span> + <span class="number">4</span>);</span><br><span class="line">alert( a ); <span class="comment">// 7 (the result of 3 + 4)</span></span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/07/01/nginx-config/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/08/02/spring-aop/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

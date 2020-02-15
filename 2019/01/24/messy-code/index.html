@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>关于乱码 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="字符显示的大致过程 应用程序接收两个参数：二进制，以及二进制的编码方式。 应用程序根据其接收的编码方式把二进制转换成矢量图形。 然后把这张矢量图形交给操作系统。 操作系统交给显示器驱动程序，转换成电信号输出到屏幕。 注意：这个应用程序可以是某个软件的自己的，也可以是操作系统提供的。 因此：一个理想的应用程序应该具有所有文字的矢量图形。但是，很久以前，这个应用程序只支持一种编码方式，那就是ASCII">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于乱码">
+<meta property="og:url" content="https://threewater.xyz/2019/01/24/messy-code/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="字符显示的大致过程 应用程序接收两个参数：二进制，以及二进制的编码方式。 应用程序根据其接收的编码方式把二进制转换成矢量图形。 然后把这张矢量图形交给操作系统。 操作系统交给显示器驱动程序，转换成电信号输出到屏幕。 注意：这个应用程序可以是某个软件的自己的，也可以是操作系统提供的。 因此：一个理想的应用程序应该具有所有文字的矢量图形。但是，很久以前，这个应用程序只支持一种编码方式，那就是ASCII">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-24T12:52:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于乱码">
+<meta name="twitter:description" content="字符显示的大致过程 应用程序接收两个参数：二进制，以及二进制的编码方式。 应用程序根据其接收的编码方式把二进制转换成矢量图形。 然后把这张矢量图形交给操作系统。 操作系统交给显示器驱动程序，转换成电信号输出到屏幕。 注意：这个应用程序可以是某个软件的自己的，也可以是操作系统提供的。 因此：一个理想的应用程序应该具有所有文字的矢量图形。但是，很久以前，这个应用程序只支持一种编码方式，那就是ASCII">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#字符显示的大致过程"><span class="toc-text">字符显示的大致过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于编码方式"><span class="toc-text">关于编码方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于转码"><span class="toc-text">关于转码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于乱码"><span class="toc-text">关于乱码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何解决乱码"><span class="toc-text">如何解决乱码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java代码演示"><span class="toc-text">Java代码演示</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#错误的解析导致正确的结果"><span class="toc-text">错误的解析导致正确的结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不同编码的二进制表示"><span class="toc-text">不同编码的二进制表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一种乱码解决办法"><span class="toc-text">第一种乱码解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二种乱码解决办法"><span class="toc-text">第二种乱码解决办法</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-messy-code" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">关于乱码</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.01.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="字符显示的大致过程"><a href="#字符显示的大致过程" class="headerlink" title="字符显示的大致过程"></a>字符显示的大致过程</h1><ol>
+<li>应用程序接收两个参数：二进制，以及二进制的编码方式。</li>
+<li>应用程序根据其接收的编码方式把二进制转换成矢量图形。</li>
+<li>然后把这张矢量图形交给操作系统。</li>
+<li>操作系统交给显示器驱动程序，转换成电信号输出到屏幕。</li>
+<li>注意：这个应用程序可以是某个软件的自己的，也可以是操作系统提供的。</li>
+<li>因此：一个理想的应用程序应该具有所有文字的矢量图形。但是，很久以前，这个应用程序只支持一种编码方式，那就是ASCII码，所以计算机也就只能显示英文了。</li>
+</ol>
+<h1 id="关于编码方式"><a href="#关于编码方式" class="headerlink" title="关于编码方式"></a>关于编码方式</h1><p>编码方式就是现实世界的字符到二进制的一种映射，每种编码方式对这种映射的实现都不同。比如ASCII码就实现了字母，数字到二进制的映射。那么有没有一种编码方式能够是实现世界上所有字符到二进制的映射呢？<br>那就是Unicode，但是Unicode只是一张表，世界上的每一个字符在这张表中都有唯一的编号，它没有实现映射到二进制。那么有没有这种实现呢？那就是UTF系列啦。<br>但是需要注意的是：一些常用的编码对字母和数字的二进制表示是一样的，有些则例外。所以，有时候对二进制进行错误的编码解析，也会是正确的<a href="#1">看这</a>。</p>
+<h1 id="关于转码"><a href="#关于转码" class="headerlink" title="关于转码"></a>关于转码</h1><p>所谓转码，就是把字符从一种编码方式，转换成另一种编码方式，但是字符本身不变。那么这个程序具体怎么是实现的呢？这里以UTF-8和GBK为例。</p>
+<ol>
+<li>先把 ’中‘用GBK转换成二进制串A。</li>
+<li>然后查找GBK&lt;—-&gt;UTF-8的转码映射表。</li>
+<li>找到A对应的UTF-8二进制串为B。</li>
+<li>这样’中‘的二进制表示就变成了B了。<a href="#2">看这</a></li>
+</ol>
+<h1 id="关于乱码"><a href="#关于乱码" class="headerlink" title="关于乱码"></a>关于乱码</h1><p>综上所述，字母和数字在常用的编码是不会乱码的，只有其它字符会。<br>那么乱码大概可以分为两种情况：</p>
+<ol>
+<li>对二进制的解析错误，也就是说本来用GBK编码的二进制被当成了UTF-8进行解析，由于中文在这两种编码方式中的二进制表示不同，于是就乱码了。</li>
+<li>再不知道原来二进制串编码的情况下，误以为是某种编码(当然，用这种编码查看也是乱码字符)，然后进行了转码操作，导致二进制发生了一次改变，但是乱码字符没有变。</li>
+<li>如果二进制发生了多次改变，那么很难恢复。</li>
+</ol>
+<h1 id="如何解决乱码"><a href="#如何解决乱码" class="headerlink" title="如何解决乱码"></a>如何解决乱码</h1><ol>
+<li>对于乱码的第一种情况，我们只要穷举所有的编码方式，然后打印输出，看看哪个是正常的，就OK了<a href="#3">看这</a>。</li>
+<li>对于给定一个乱码字符串(只进行过一次转码)，我们可以先改变回原来的二进制，然后用正确的编码解析这个二进制，<a href="#4">看这</a>。</li>
+</ol>
+<h1 id="Java代码演示"><a href="#Java代码演示" class="headerlink" title="Java代码演示"></a>Java代码演示</h1><h2 id="错误的解析导致正确的结果"><a href="#错误的解析导致正确的结果" class="headerlink" title="错误的解析导致正确的结果"></a>错误的解析导致正确的结果<span id="1"></span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">    System.out.println(Charset.defaultCharset());</span><br><span class="line">    String s=<span class="string">"water 1234"</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] utf8_bytes = s.getBytes();<span class="comment">//utf-8的二进制</span></span><br><span class="line">    Set&lt;String&gt; char_encodings =Charset.availableCharsets().keySet();</span><br><span class="line">    <span class="keyword">for</span>(String encoding:char_encodings)&#123;</span><br><span class="line">        String res = <span class="keyword">new</span> String(utf8_bytes, encoding);</span><br><span class="line">        System.out.println(encoding+<span class="string">":   "</span>+res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果(部分)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Big5:   water 1234</span><br><span class="line">EUC-JP:   water 1234</span><br><span class="line">GB2312:   water 1234</span><br><span class="line">GBK:   water 1234</span><br><span class="line">IBM-Thai:   ป/ธฒถ</span><br><span class="line">UTF-16:   睡瑥爠ㄲ㌴</span><br><span class="line">UTF-8:   water 1234</span><br><span class="line">UTF-32:   ���</span><br></pre></td></tr></table></figure>
+
+<h2 id="不同编码的二进制表示"><a href="#不同编码的二进制表示" class="headerlink" title="不同编码的二进制表示"></a>不同编码的二进制表示<span id="2"></span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">    String s=<span class="string">"中"</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] A = s.getBytes(<span class="string">"GBK"</span>);</span><br><span class="line">    String s1=<span class="keyword">new</span> String(A,<span class="string">"GBK"</span>);</span><br><span class="line">    <span class="keyword">byte</span>[] B = s1.getBytes(<span class="string">"UTF-16"</span>);</span><br><span class="line">    soutBytes(A);</span><br><span class="line">    soutBytes(B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GBK: -42-48</span><br><span class="line">UTF_16: -2-17845</span><br></pre></td></tr></table></figure>
+
+<h2 id="第一种乱码解决办法"><a href="#第一种乱码解决办法" class="headerlink" title="第一种乱码解决办法"></a>第一种乱码解决办法<span id="3"></span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">(<span class="keyword">byte</span>[] bytes)</span> <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">    Set&lt;String&gt; char_encodings = Charset.availableCharsets().keySet();</span><br><span class="line">    <span class="keyword">for</span>(String encoding:char_encodings)&#123;</span><br><span class="line">        String res = <span class="keyword">new</span> String(bytes, encoding);</span><br><span class="line">        System.out.println(encoding+<span class="string">":   "</span>+res);<span class="comment">//输出解读结果</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="第二种乱码解决办法"><a href="#第二种乱码解决办法" class="headerlink" title="第二种乱码解决办法"></a>第二种乱码解决办法<span id="4"></span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//对于一个字符串，误以为他是某种编码，然后又对他进行转码操作。</span></span><br><span class="line"><span class="comment">//导致二进制进行了一次改变。</span></span><br><span class="line"><span class="comment">//解决办法，改回原来的二进制，然后以正确的编码进行解析</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test3</span> <span class="params">(String str)</span> <span class="keyword">throws</span> UnsupportedEncodingException </span>&#123;</span><br><span class="line">    Set&lt;String&gt; char_encodings = Charset.availableCharsets().keySet();</span><br><span class="line">    <span class="keyword">for</span>(String encode_byte:char_encodings)&#123;</span><br><span class="line">        <span class="keyword">for</span>(String encode_read:char_encodings)&#123;</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = str.getBytes(encode_byte);<span class="comment">//改回原来的二进制</span></span><br><span class="line">            String s=<span class="keyword">new</span> String(bytes,encode_read);<span class="comment">//以正确的方式进行解析</span></span><br><span class="line">            System.out.println(s);<span class="comment">//查看是否正确</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/01/23/linux-app-install/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/01/26/access-modifier/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
