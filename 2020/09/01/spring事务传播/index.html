@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>spring事务传播 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="REQUIRED:当前子事务在父事务(如果有)的环境下运行(同一个物理事务，同一个Connection连接)子事务发生了异常，就会回滚(如果子事务设置了rollbackfor)，由于共享的是同一个物理连接并且右如果这个异常又被父事务try/catch了(也就是说父事务感知不到异常发生了)，所以子事务回滚是在父事务意料之外的，就会抛出UnexpectedRollbackException。 NEST">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring事务传播">
+<meta property="og:url" content="https://threewater.xyz/2020/09/01/spring事务传播/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="REQUIRED:当前子事务在父事务(如果有)的环境下运行(同一个物理事务，同一个Connection连接)子事务发生了异常，就会回滚(如果子事务设置了rollbackfor)，由于共享的是同一个物理连接并且右如果这个异常又被父事务try/catch了(也就是说父事务感知不到异常发生了)，所以子事务回滚是在父事务意料之外的，就会抛出UnexpectedRollbackException。 NEST">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-01T07:56:36.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring事务传播">
+<meta name="twitter:description" content="REQUIRED:当前子事务在父事务(如果有)的环境下运行(同一个物理事务，同一个Connection连接)子事务发生了异常，就会回滚(如果子事务设置了rollbackfor)，由于共享的是同一个物理连接并且右如果这个异常又被父事务try/catch了(也就是说父事务感知不到异常发生了)，所以子事务回滚是在父事务意料之外的，就会抛出UnexpectedRollbackException。 NEST">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-spring事务传播" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">spring事务传播</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.09.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>REQUIRED:<br>当前子事务在父事务(如果有)的环境下运行(同一个物理事务，同一个Connection连接)<br>子事务发生了异常，就会回滚(如果子事务设置了rollbackfor)，由于共享的是同一个物理连接<br>并且右如果这个异常又被父事务<code>try/catch</code>了(也就是说父事务感知不到异常发生了)，所以子事务回滚是<br>在父事务意料之外的，就会抛出<code>UnexpectedRollbackException</code>。
+NESTED:<br>嵌套事务，嵌套事务可以解决上述问题，也就是说，如果某个子事务发生了异常，子事务回滚，<br>但是父事务继续执行，就在子事务上配置<code>NESTED</code>。这个NESTED和上面一样，依然是，子事务和父事务<br>共享同一个物理事务(就是同一个Connection连接),但是在启动NESTED子事务之前,会对物理连接设置<br>一个savepoint，这样子事务回滚也是回滚到这个savepoint。然后父事务可以继续执行。<br>当然如果子事务异常没有被父事务<code>try/catch</code>。父事务也感知到了这个异常，父事务也会回滚。<br>这个要注意一下。<br>REQUIRED_NEW:<br>新建一个事务。这里新建一个事务，实际上是从数据库(连接池)获取了两个连接(注意是物理连接)。<br>这样的话就相当于一个线程，持有了两个连接。<br>如果子事务标注了<code>REQUIRED_NEW</code>那么执行这个到这个方法时，就会重新获取新连接，这个<br>事务是独立的，父事务如果没有<code>try/cacth</code>这个事务的异常，父事务也会回滚，如果你不希望父事务回滚<br>就最好<code>try/catch</code>一下。<br>注意：在这种情况下，会存在死锁的问题，最好不要父子事务修改同一行。<br>NOT_SUPPORTED:<br>不支持事务，也就是说，如果当前事务存在，则创建一个无事务的环境，新的connection连接。一个线程，获取<br>两个物理连接。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/08/26/mybatis缓存/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/09/01/spring生命周期/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

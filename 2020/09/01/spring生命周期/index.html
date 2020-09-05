@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>spring生命周期 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring生命周期">
+<meta property="og:url" content="https://threewater.xyz/2020/09/01/spring生命周期/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-01T08:13:39.359Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring生命周期">
+<meta name="twitter:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结："><span class="toc-text">总结：</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-spring生命周期" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">spring生命周期</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.09.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <ol>
+<li>BeanFactoryPostProcessor不由Spring的生命周期管<br> 调用BeanFactoryPostProcessor及其子类的构造方法</li>
+<li> 调用BeanFactoryPostProcessor的postProcessBeanFactory方法，<br> 此时容器中已经有一些基本的bean(不包含以下所有的bean)。<br> 比如各种BeanFactoryPostProcessor，以及系统环境变量bean</li>
+<li>4.1构建BeanPostProcessor极其子类，包括InstantiationAwareBeanPostProcessor<br>4.2调用其init(@PostCountruct)方法</li>
+<li>从BeanPostProcessor构建出来以后，以后每次创建新的bean，都需要走以下流程。<br>5.1 InstantiationAwareBeanPostProcessor的<pre><code>postProcessBeforeInstantiation(Class&lt;?&gt; beanClass, String beanName)::Object方法</code></pre>5.2 新bean的构造方法(构建顺序:各种Aware类型的bean–&gt;FactoryBean(zai)–&gt;DestroyBean–&gt;InitializingBean–&gt;普通bean)<pre><code>新的bean构造方法调用完之后，都需要走InstantiationAwareBeanPostProcessor
+的postProcessAfterInstantiation(Object bean, String beanName)::boolean方法</code></pre></li>
+<li> 6.2调用InstantiationAwareBeanPostProcessor的postProcessProperties方法<br> 6.2为新Bean设置属性值(@AutoWired)。</li>
+<li> 7.1 在新bean的init方法调用之前，都会走BeanPostProcessor及其之类的<pre><code>postProcessBeforeInitialization(Object bean, String beanName)::Object方法</code></pre> 7.2 新bean的init(@PostCountruct注解标注的)方法<br> 7.3 在新bean的init方法调用之后，都会走BeanPostProcessor及其之类的<pre><code>postProcessAfterInitialization(Object bean, String beanName)::Object方法</code></pre></li>
+<li> 8.1 容器close时，调用所有普通bean的destroy方法<br> 8.2 调用DisposableBean及其子类的destroy方法<br> 8.3 调用Aware类型的bean的destroy方法<br> 8.4 最后调用BeanPostProcessor及其子类的destroy方法</li>
+</ol>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>在Spring的运行过程中，总共有几种不同类型的Bean，他们的加载优先级是不同的。<br>       0. Spring一开始就知道所有类型的Bean，只是还没开始new。<br>       1. BeanFactoryPostProcessor顶级Bean，不加入生命周期<br>       2. BeanPostProcessor监控级别的Bean，监视以后所有Bean的构造方法，init方法。<br>           子类InstantiationAwareBeanPostProcessor还会监视(控制)属性注入方法。<br>       3. Aware类型的Bean，用来提前注入容器基础资源<br>       4. 普通Bean。<br>       5. 除了BeanFactoryPostProcessor之外，所有Bean都可以加@PostConstruct，@PreDestroy方法<br>       6. 因为普通Bean可能会有循环依赖，所以普通Bean采用并行构造，其他的Bean的采用顺序构造。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/09/01/spring事务传播/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/09/01/spring事件监听机制/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

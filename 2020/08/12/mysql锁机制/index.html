@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>mysql锁机制 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="为了保证数据的一致性，同时为了方便程序的开发提高程序的并发性能，数据库提出了四种隔离级别 数据库的两段锁协议：也就是说，在食物中进行读写操作时，会对表或者行进行加锁，直到事务提交或者回滚才会释放锁。 Read UnCommited : 不加任何锁，该写的写，该读的读Read Commited : 加写锁，读不加锁，当多个事务对有锁的行写时，就会等待，直到事务提交释放锁Repeatable Read">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql锁机制">
+<meta property="og:url" content="https://threewater.xyz/2020/08/12/mysql锁机制/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="为了保证数据的一致性，同时为了方便程序的开发提高程序的并发性能，数据库提出了四种隔离级别 数据库的两段锁协议：也就是说，在食物中进行读写操作时，会对表或者行进行加锁，直到事务提交或者回滚才会释放锁。 Read UnCommited : 不加任何锁，该写的写，该读的读Read Commited : 加写锁，读不加锁，当多个事务对有锁的行写时，就会等待，直到事务提交释放锁Repeatable Read">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-08-12T03:43:14.011Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql锁机制">
+<meta name="twitter:description" content="为了保证数据的一致性，同时为了方便程序的开发提高程序的并发性能，数据库提出了四种隔离级别 数据库的两段锁协议：也就是说，在食物中进行读写操作时，会对表或者行进行加锁，直到事务提交或者回滚才会释放锁。 Read UnCommited : 不加任何锁，该写的写，该读的读Read Commited : 加写锁，读不加锁，当多个事务对有锁的行写时，就会等待，直到事务提交释放锁Repeatable Read">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-mysql锁机制" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">mysql锁机制</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.08.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>为了保证数据的一致性，同时为了方便程序的开发提高程序的并发性能，数据库提出了四种隔离级别</p>
+<p>数据库的两段锁协议：也就是说，在食物中进行读写操作时，会对表或者行进行加锁，直到事务提交或者回滚<br>才会释放锁。</p>
+<p>Read UnCommited : 不加任何锁，该写的写，该读的读<br>Read Commited : 加写锁，读不加锁，当多个事务对有锁的行写时，就会等待，直到事务提交释放锁<br>Repeatable Read : 这里有很多种实现方案：<br>                    1. 读操作加读锁(共享锁)，写操作加写锁(排他锁)，读写互斥(悲观锁)，这样当一个事务对某些<br>                        行加了读锁时，其它事务就不能写入，只能等待，这样就能保证当前事务再次读取<br>                        这些行时，数据依然是不变的，这样就是可重复读。<br>                        但是如果，其他事务对其他的行进行更改，依然是可以进行的，这样就是幻读</p>
+<pre><code>    如果在进行写入时，没有走索引查找，数据库就无法确定修改哪条数据，数据就会锁住所有行
+    然后一行一行找，如果当前行不符合，就是释放锁(为了并发性，违反了二段锁协议)。  
+2. 使用乐观锁，一种实现是类似GIt的版本控制实现。多个事务进行读写时保存当前版本
+   这样其它事务更改数据时，当前事务读到的都是历史数据，实现了可重复读。但是由于读到
+   的时历史数据，某些业务场景下可能会出问题，为此我们可以使用`lock in share mode`
+   加在查询语句后面，这样就能保证读取到的是最新的数据，但是会依然会出现幻读的问题，
+   在Mysql数据库中，使用了Gap锁解决了一部分幻读的问题，Gap锁就是当事务读取某些行时
+   会对这些行所在的区间进行加锁，这样当前区间不能写入，其它区间还是能写入的。依然会有一部分幻读问题。</code></pre>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/08/07/css常用设置/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/08/26/mybatis缓存/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

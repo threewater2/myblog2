@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>juc记录 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="线程调用isinterrupt会重设 ExecutorService 的shudown()只是阻止新的任务添加，已经在等待和正在执行的任务不会被停止 shutdownNow()除了阻止新的任务添加的同时，也会取消所有已经在队列中的任务。submit方法可以提交任务，invokeAll是提交一组方法，等待所有方法执行完之后，返回，在这之前阻塞invokeAny是提交一组方法，只要当中的一个方法执行完">
+<meta property="og:type" content="article">
+<meta property="og:title" content="juc记录">
+<meta property="og:url" content="https://threewater.xyz/2020/07/11/juc2/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="线程调用isinterrupt会重设 ExecutorService 的shudown()只是阻止新的任务添加，已经在等待和正在执行的任务不会被停止 shutdownNow()除了阻止新的任务添加的同时，也会取消所有已经在队列中的任务。submit方法可以提交任务，invokeAll是提交一组方法，等待所有方法执行完之后，返回，在这之前阻塞invokeAny是提交一组方法，只要当中的一个方法执行完">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-07-13T01:52:40.305Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="juc记录">
+<meta name="twitter:description" content="线程调用isinterrupt会重设 ExecutorService 的shudown()只是阻止新的任务添加，已经在等待和正在执行的任务不会被停止 shutdownNow()除了阻止新的任务添加的同时，也会取消所有已经在队列中的任务。submit方法可以提交任务，invokeAll是提交一组方法，等待所有方法执行完之后，返回，在这之前阻塞invokeAny是提交一组方法，只要当中的一个方法执行完">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#SynchronousQueue测试"><span class="toc-text">SynchronousQueue测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReentrantReadWriteLock"><span class="toc-text">ReentrantReadWriteLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ForkJoinPool测试"><span class="toc-text">ForkJoinPool测试</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-juc2" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">juc记录</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.07.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>线程调用isinterrupt会重设</p>
+<p>ExecutorService 的shudown()只是阻止新的任务添加，已经在等待和正在执行的任务不会被停止<br> shutdownNow()除了阻止新的任务添加的同时，也会取消所有已经在队列中的任务。<br>submit方法可以提交任务，<br>invokeAll是提交一组方法，等待所有方法执行完之后，返回，在这之前阻塞<br>invokeAny是提交一组方法，只要当中的一个方法执行完了，就返回</p>
+<p>ScheduledExecutorService比ExecutorService 多了几个方法，这个类可以用来延迟执行<br>一些任务，也可以重复执行一些任务<br>schedule可以延迟执行<br>scheduleAtFixedRate可以重复执行，如果任务执行时间太长，超过了设定的时间间隔，不会<br>后面的任务也会因为上一个任务延期而延期，不会另开一个线程立马开始。<br>scheduleWithFixedDelay也是重复执行，只不过它是等上一个任务执行完后，再隔一定的间隔。</p>
+<p> ThreadPoolExecutor<br> 是ExecutorService的实现类，<br> 整个Executor受三个因素的制约，corePoolSize，maxPoolSize，以及任务blockingQueue<br>对于Queue有三种类型的</p>
+<p>一下都是BlockQueue的实现类，<br>出队和入队方法都必须保证线程安全。</p>
+<ol>
+<li><p>SynchronousQueue<br>是一个同步Queue，也就是说，往这个队列里面添加元素，必须马上有线程接收，如果线程数已经达到了<br>maxPoolSize，并且也没有空闲的，就会拒接这个任务，抛出异常，所以为了不拒接任务，最好声明<br>maxPoolSize为无限大，但是这样的话，如果添加任务的速度比消化任务的速度快，线程就会无限制的增长<br>由于能够保证来了任务就能被处理，这种队列适合任务和任务之间有关系的情况。</p>
+</li>
+<li><p>LinkedBlockingQueue<br>这个队列是一个无界的队列，任务可以无限制的添加，永远也添加不满。但是根据，corePoolSize和maxPoolSize的关系<br>当线程数达到corePoolSize大小时，如果要继续增加线程，要看队列满不满，满就添加。由于这个队列永远不会满，所以<br>线程数永远等于corePoolSize。这种队列一般适用于任务之间互相没有关系。也可以用于处理大量的突发请求。当然如果<br>线程消化的速度跟不上，队列就会无限增长。所以这种队列不适合操作IO，更适合操作频繁，但是耗时短的操作，例如静态<br>页面请求。</p>
+</li>
+<li><p>ArrayBlockingQueue<br>这是一个有界的队列，可能会存在队满的情况，如果队满，线程也没有空闲，并且已经达到了最大线程数，那么新来的任务就会被拒收。<br>因此整个队列的大小和线程数量的定义就很重要。大队列和小线程，能够避免cpu频繁的线程切换开销，但是由于线程少，任务多。也可能<br>造成低吞吐量，如果队列小，线程多，那么cpu切换频繁，也会影响吞吐量，这两者之间有一个平衡点。</p>
+</li>
+<li><p>ConcurrentLinkedQueue<br>一种无锁但是又线程安全的无界队列，基于CAS实现。</p>
+</li>
+</ol>
+<p>ExecutorService还有一个类，叫ForkJoinPool，要使用它必须实现RecursiveTask接口，或者RecursiAction<br>表明这是一个递归任务，前者表示有返回值的递归任务，后者表示无返回值的递归任务。<br>如果任务足够小，就由当前线程处理，如果任务太大，就创建一个新的RecursiveTask任务，然后调用它的fork方法<br>最后要获取结果就调用get方法，</p>
+<h3 id="SynchronousQueue测试"><a href="#SynchronousQueue测试" class="headerlink" title="SynchronousQueue测试"></a>SynchronousQueue测试</h3><p>如果所有线程都在忙，那么就会抛出RejectedExecutionException异常<br>最后调用了shudown方法，但是如果抛出了execute方法抛出了RejectedExecutionException<br>执行器依然不会结束，最保险的做法是，try一下execute方法，cath它的所有异常，最后<br>在finaly中调用shutdown。</p>
+<h3 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h3><p>读操作获取它的读锁，读完了就释放，写操作获取他的写锁，写完就释放。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater.thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.SynchronousQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueueTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ThreadPoolExecutor threadPoolExecutor=<span class="keyword">new</span> ThreadPoolExecutor(<span class="number">10</span>,</span><br><span class="line">                <span class="number">12</span>,<span class="number">1000</span>,</span><br><span class="line">                TimeUnit.SECONDS,<span class="keyword">new</span> SynchronousQueue&lt;&gt;());</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">13</span>;i++)&#123;</span><br><span class="line">            <span class="comment">//如果这个execute方法抛出了异常，</span></span><br><span class="line">            <span class="comment">//比如某个任务拒绝执行了，那么就会抛出RejectedExecutionException</span></span><br><span class="line">            <span class="comment">//主线程就结束了，shutdown方法不会执行，执行器就没有销毁，这里要注意</span></span><br><span class="line">            threadPoolExecutor.execute(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">"睡够了"</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        threadPoolExecutor.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+
+<h3 id="ForkJoinPool测试"><a href="#ForkJoinPool测试" class="headerlink" title="ForkJoinPool测试"></a>ForkJoinPool测试</h3><p>计算一个数组的和，如果大于5，就拆分运行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater.thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkJoinTest</span> <span class="keyword">extends</span> <span class="title">RecursiveTask</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr;</span><br><span class="line">    <span class="keyword">int</span> start;</span><br><span class="line">    <span class="keyword">int</span> end;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ForkJoinTest</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.arr = arr;</span><br><span class="line">        <span class="keyword">this</span>.start = start;</span><br><span class="line">        <span class="keyword">this</span>.end = end;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Integer <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(end-start&lt;=<span class="number">5</span>)&#123;</span><br><span class="line">            <span class="keyword">while</span> (start&lt;=end)&#123;</span><br><span class="line">                sum+=arr[start++];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> sum;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> mid = (end - start) / <span class="number">2</span>;</span><br><span class="line">            ForkJoinTest subTask1 = <span class="keyword">new</span> ForkJoinTest(arr, start, start+mid);</span><br><span class="line">            ForkJoinTest subTask2 = <span class="keyword">new</span> ForkJoinTest(arr, start+mid + <span class="number">1</span>, end);</span><br><span class="line">            subTask1.fork();</span><br><span class="line">            subTask2.fork();</span><br><span class="line">            <span class="keyword">return</span> subTask1.join()+subTask2.join();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10000</span>];</span><br><span class="line">        Arrays.fill(arr,<span class="number">1</span>);</span><br><span class="line">        ForkJoinTest forkJoinTest = <span class="keyword">new</span> ForkJoinTest(arr, <span class="number">0</span>, arr.length - <span class="number">1</span>);</span><br><span class="line">        ForkJoinPool executorService = (ForkJoinPool) Executors.newWorkStealingPool();</span><br><span class="line">        Integer invoke = executorService.invoke(forkJoinTest);</span><br><span class="line">        System.out.println(invoke);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/07/09/红黑树/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/07/13/nio/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="山水">
 <meta property="og:description" content="Collection是顶级接口，表示无序的，可重复元素的集合。Set 是不可重复元素结合，常用的实现类有  TreeSet，基于红黑树实现，能够保持插入的顺序  HashSet，基于哈希表实现，不能保证顺序，但是查找一个元素的效率高  LinkHasSet，弥补了HashSet的不足，通过一个双向链表来维护插入的顺序List 可重复元素集合，常用的实现类有  ArrayList，基于数组实现，当数">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-03-09T14:23:46.904Z">
+<meta property="og:updated_time" content="2020-03-11T07:28:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试准备之-Java集合框架复习">
 <meta name="twitter:description" content="Collection是顶级接口，表示无序的，可重复元素的集合。Set 是不可重复元素结合，常用的实现类有  TreeSet，基于红黑树实现，能够保持插入的顺序  HashSet，基于哈希表实现，不能保证顺序，但是查找一个元素的效率高  LinkHasSet，弥补了HashSet的不足，通过一个双向链表来维护插入的顺序List 可重复元素集合，常用的实现类有  ArrayList，基于数组实现，当数">
@@ -190,6 +190,7 @@
     
       <p>Collection是顶级接口，表示无序的，可重复元素的集合。<br>Set 是不可重复元素结合，常用的实现类有<br>  TreeSet，基于红黑树实现，能够保持插入的顺序<br>  HashSet，基于哈希表实现，不能保证顺序，但是查找一个元素的效率高<br>  LinkHasSet，弥补了HashSet的不足，通过一个双向链表来维护插入的顺序<br>List 可重复元素集合，常用的实现类有<br>  ArrayList，基于数组实现，当数组装满到一定程度之后，会自动进行扩容，在中间插入数据要移动数组<br>  LinkList，基于双向链表实现能够保证插入时的顺序，中间插入数据不需要移动。<br>            还额外提供了从开始处添加和从末尾处添加等操作。可以用来实现队列，栈<br>Queue 队列，一种从头部进，尾部出的一种数据结构。</p>
 <p>支持并发的容器<br>ConcurrentHashMap ，就是把数组分成几个段，然后在不同的段上加上不同的锁，这样多个线程只要访问<br>不同的段，就可以实现同时访问。</p>
+<p>CopyOnWriteList，读写分离List ,读在一个数组，写也在一个数组。写完之后复制成一份新数组，然后指向<br>这个新数组。</p>
 
     
   </div>

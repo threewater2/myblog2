@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="山水">
 <meta property="og:description" content="通过注解，我们可以在运行时获取信息，我们来通过注解和反射，实现一个简单的DI。 1234567891011121314151617181920212223242526272829303132@Target(ElementType.FIELD)@Retention(RetentionPolicy.RUNTIME)public @interface SimpleInject &amp;#123;&amp;#125;p">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-14T06:36:04.000Z">
+<meta property="og:updated_time" content="2020-07-21T02:21:40.812Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="注解">
 <meta name="twitter:description" content="通过注解，我们可以在运行时获取信息，我们来通过注解和反射，实现一个简单的DI。 1234567891011121314151617181920212223242526272829303132@Target(ElementType.FIELD)@Retention(RetentionPolicy.RUNTIME)public @interface SimpleInject &amp;#123;&amp;#125;p">
@@ -151,6 +151,11 @@
 </div>
 
 
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#注解的属性有其限制"><span class="toc-text">注解的属性有其限制</span></a></li></ol>
+  </div>
+
 
 
 <div class="content content-post CENTER">
@@ -191,6 +196,7 @@
       <p>通过注解，我们可以在运行时获取信息，我们来通过注解和反射，实现一个简单的DI。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.FIELD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SimpleInject &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceA</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceB</span> </span>&#123;</span><br><span class="line">    <span class="comment">//依赖注入</span></span><br><span class="line">    <span class="meta">@SimpleInject</span></span><br><span class="line">    <span class="keyword">private</span> ServiceA serviceA;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">useA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(serviceA==<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleDI</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">getInstance</span><span class="params">(Class&lt;T&gt; cls)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        T instance = cls.newInstance();</span><br><span class="line">        Field[] fields = cls.getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span>(Field field:fields)&#123;</span><br><span class="line">            <span class="keyword">if</span>(field.isAnnotationPresent(SimpleInject.class))&#123;</span><br><span class="line">                <span class="keyword">if</span>(!field.isAccessible()) field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                field.set(instance,getInstance(field.getType()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        SimpleDI di = <span class="keyword">new</span> SimpleDI();</span><br><span class="line">        ServiceB b = di.getInstance(ServiceB.class);</span><br><span class="line">        b.useA();<span class="comment">//输出false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="注解的属性有其限制"><a href="#注解的属性有其限制" class="headerlink" title="注解的属性有其限制"></a>注解的属性有其限制</h2><p>1.基本数据类型<br>2.String<br>3.枚举类型<br>4.注解类型<br>5.Class类型<br>6.以上类型的一维数组类型</p>
 
     
   </div>

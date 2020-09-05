@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Arrays工具类 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,">
+  
+
+  <meta name="description" content="Arrays 工具类可以对数组进行二分查找，支持基本的数据类型和范型，对于范型需要传入自定义的比较器。值得注意的是Java内部实现的时候对除二操作采用了移位运算。而且它的返回值不是返回-1而是返回数组low没有找到的位置static int    binarySearch(double[] a, double key)static &amp;lt;T&amp;gt; int    binarySearch(T[">
+<meta name="keywords" content="学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Arrays工具类">
+<meta property="og:url" content="https://threewater.xyz/2020/06/23/Arrays工具类/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="Arrays 工具类可以对数组进行二分查找，支持基本的数据类型和范型，对于范型需要传入自定义的比较器。值得注意的是Java内部实现的时候对除二操作采用了移位运算。而且它的返回值不是返回-1而是返回数组low没有找到的位置static int    binarySearch(double[] a, double key)static &amp;lt;T&amp;gt; int    binarySearch(T[">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-28T03:44:07.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Arrays工具类">
+<meta name="twitter:description" content="Arrays 工具类可以对数组进行二分查找，支持基本的数据类型和范型，对于范型需要传入自定义的比较器。值得注意的是Java内部实现的时候对除二操作采用了移位运算。而且它的返回值不是返回-1而是返回数组low没有找到的位置static int    binarySearch(double[] a, double key)static &amp;lt;T&amp;gt; int    binarySearch(T[">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#快速排序实现"><span class="toc-text">快速排序实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#希尔排序实现"><span class="toc-text">希尔排序实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#归并排序"><span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基数排序"><span class="toc-text">基数排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#堆排序"><span class="toc-text">堆排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计数排序"><span class="toc-text">计数排序</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Arrays工具类" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Arrays工具类</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.06.23</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <ol>
+<li>Arrays 工具类可以对数组进行二分查找，支持基本的数据类型和范型，对于范型需要传入自定义的比较器。<br>值得注意的是Java内部实现的时候对除二操作采用了移位运算。而且它的返回值不是返回-1而是返回数组low没有找到的位置<br><code>static int    binarySearch(double[] a, double key)</code><br><code>static &lt;T&gt; int    binarySearch(T[] a, int fromIndex, int toIndex, T key, Comparator&lt;? super T&gt; c)</code></li>
+<li>copyOf 方法即可对数组进行缩小也可以放大，缩小会截断，放大的话对于基本数据类型的数组会自动补全初始值，<br>对于引用类型，自动补null。内部实现是创建一个新数组，然后使用System.arraycopy本地方法进行复制<br><code>static float[]    copyOf(float[] original, int newLength)</code></li>
+<li>Arrays.copyOfRange 内部实现和copyOf一样，只是可以指定从那个位置开始。</li>
+<li>Arrays.equals 方法可以比较两个数组的内容是否相等，但是如果元素相同但是顺序不同也不会相等<br>内部使用for循环实现。<br><code>static boolean    equals(long[] a, long[] a2)</code></li>
+<li>Arrays.fill方法可以对一个数组进行填充，内部使用for循环实现。<br><code>static void fill(boolean[] a, boolean val)</code></li>
+</ol>
+<p>二分查找实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] arr,<span class="keyword">int</span> key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(arr.length==<span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> low=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> high=arr.length-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (low&lt;=high)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid=(low+high)&gt;&gt;&gt;<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(key&gt;arr[mid])&#123;</span><br><span class="line">            low=mid+<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(key&lt;arr[mid])&#123;</span><br><span class="line">            high=mid-<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -low;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速排序实现"><a href="#快速排序实现" class="headerlink" title="快速排序实现"></a>快速排序实现</h3><p>快速排序主要是选择一个基准数，然后把数组分成左右两边，最后在对左右两边递归排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] ints = &#123;<span class="number">1</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">3</span>&#125;;</span><br><span class="line">        startSort(ints);</span><br><span class="line">        System.out.println(Arrays.toString(ints));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(arr==<span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">        quickSort(arr,<span class="number">0</span>,arr.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] arr,<span class="keyword">int</span> l,<span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">        <span class="comment">//如果上一步mid指向0位置，那么l=0，r=-1</span></span><br><span class="line">        <span class="comment">//如果上一步mid指向arr.length-1位置那么l=arr.length,r=arr.length-1;</span></span><br><span class="line">        <span class="comment">//如果上一步指向1位置，那么l=0，r=0;一个元素没有意义</span></span><br><span class="line">        <span class="comment">//如果上一步指向arr.length-2位置，那么l=arr.length-1,r=arr.length-1</span></span><br><span class="line">        <span class="keyword">if</span>(l&gt;=r) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> base=arr[l],start=l,end=r;</span><br><span class="line">        <span class="keyword">while</span> (start&lt;end)&#123;</span><br><span class="line">            <span class="comment">//先循环找右边的数,如果找到end位置还是没有，那么表明整个数组已经满足条件了</span></span><br><span class="line">            <span class="keyword">while</span> (start&lt;end&amp;&amp;arr[end]&gt;=base)&#123;</span><br><span class="line">                end--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(start&lt;end)&#123;<span class="comment">//找了一圈找到了，如果相等就没找到</span></span><br><span class="line">                <span class="comment">//交换</span></span><br><span class="line">                arr[start]=arr[end];</span><br><span class="line">                <span class="comment">//位置已经占用，移动到下一个位置</span></span><br><span class="line">                start++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//再从左往右找</span></span><br><span class="line">            <span class="keyword">while</span> (start&lt;end&amp;&amp;arr[start]&lt;=base)&#123;</span><br><span class="line">                start++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(start&lt;end)&#123;<span class="comment">//找到了，如果相等表示没有找到</span></span><br><span class="line">                arr[end]=arr[start];</span><br><span class="line">                end--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//最后end，和start都会指向空位置</span></span><br><span class="line">        arr[start]=base;</span><br><span class="line">        <span class="comment">//再递归找左边的</span></span><br><span class="line">        quickSort(arr,l,start-<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//再递归找右边的</span></span><br><span class="line">        quickSort(arr,start+<span class="number">1</span>,r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="希尔排序实现"><a href="#希尔排序实现" class="headerlink" title="希尔排序实现"></a>希尔排序实现</h3><p>因为插入排序对基本有序的数组移动次数较少，通过设置一个间隔，把间隔较远的元素基本有序，再用插入排序效率就比较高。<br>最后不断缩小间隔，使全部内容有序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 希尔排序</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShellSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(arr==<span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">//首先，循环几组间隔</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> d = arr.length&gt;&gt;&gt;<span class="number">1</span>; d&gt;<span class="number">0</span>; d&gt;&gt;&gt;=<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="comment">//决定该间隔下需要移动的次数</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i += d) &#123;</span><br><span class="line">                <span class="comment">//对新元素插入到有序的数组中</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &gt; <span class="number">0</span>; j -= d) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (arr[j] &lt; arr[j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tmp = arr[j];</span><br><span class="line">                        arr[j] = arr[j - <span class="number">1</span>];</span><br><span class="line">                        arr[j - <span class="number">1</span>] = tmp;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr=<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">3</span>&#125;;</span><br><span class="line">        startSort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 归并排序</span></span><br><span class="line"><span class="comment"> * 基本思想是对两个有序的数组进行合并，</span></span><br><span class="line"><span class="comment"> * 由于一个元素的数组是有序的，这样两个一个元素的数组合并成有序的之后，</span></span><br><span class="line"><span class="comment"> * 再和另一个有序的数组进行合并。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MergeSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] tmp=<span class="keyword">new</span> <span class="keyword">int</span>[arr.length];</span><br><span class="line">        startSort(arr,<span class="number">0</span>,arr.length-<span class="number">1</span>,tmp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startSort</span><span class="params">(<span class="keyword">int</span>[] arr,<span class="keyword">int</span> start,<span class="keyword">int</span> end,<span class="keyword">int</span>[] tmp)</span></span>&#123;</span><br><span class="line">        <span class="comment">//只有一个元素时，不需要排，</span></span><br><span class="line">        <span class="keyword">if</span>(start&gt;=end) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> mid=((end-start)&gt;&gt;&gt;<span class="number">1</span>)+start;</span><br><span class="line">        startSort(arr,start,mid,tmp);</span><br><span class="line">        startSort(arr,mid+<span class="number">1</span>,end,tmp);</span><br><span class="line">        merge(arr,start,mid,end,tmp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] arr,<span class="keyword">int</span> start,<span class="keyword">int</span> mid,<span class="keyword">int</span> end,<span class="keyword">int</span>[] tmp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=start;</span><br><span class="line">        <span class="comment">//从第二个数组的第一位开始</span></span><br><span class="line">        <span class="keyword">int</span> j=mid+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> t=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (i&lt;=mid&amp;&amp;j&lt;=end)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[i]&lt;arr[j])&#123;</span><br><span class="line">                tmp[t++]=arr[i];</span><br><span class="line">                i++;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                tmp[t++]=arr[j];</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (i&lt;=mid)&#123;</span><br><span class="line">            tmp[t++]=arr[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (j&lt;=mid)&#123;</span><br><span class="line">            tmp[t++]=arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        t=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (start&lt;=end)&#123;</span><br><span class="line">            arr[start++]=tmp[t++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] ints = &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>&#125;;</span><br><span class="line">        sort(ints);</span><br><span class="line">        System.out.println(Arrays.toString(ints));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基数排序，基本思想是：先对各位进行排序，然后再对10位，再对100位。</span></span><br><span class="line"><span class="comment"> * 参考：https://www.runoob.com/w3cnote/radix-sort.html</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RadixSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        Map&lt;Integer, LinkedList&lt;Integer&gt;&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> maxLength = getMaxLength(arr);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>,count;i&lt;=maxLength;i++)&#123;</span><br><span class="line">            <span class="comment">//放入容器</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> value : arr) &#123;</span><br><span class="line">                <span class="keyword">int</span> digit = getDigit(value, i);</span><br><span class="line">                LinkedList&lt;Integer&gt; integers = map.computeIfAbsent(digit, k -&gt; <span class="keyword">new</span> LinkedList&lt;&gt;());</span><br><span class="line">                integers.addLast(value);</span><br><span class="line">            &#125;</span><br><span class="line">            count=<span class="number">0</span>;</span><br><span class="line">            <span class="comment">//从容器中拿出</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=<span class="number">9</span>;j++)&#123;</span><br><span class="line">                LinkedList&lt;Integer&gt; integers = map.get(j);</span><br><span class="line">                <span class="keyword">while</span> (integers!=<span class="keyword">null</span>&amp;&amp;!integers.isEmpty())&#123;</span><br><span class="line">                    arr[count++]=integers.removeFirst();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取一个数组最大的位数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 一个数组上最大数的位数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getMaxLength</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        OptionalInt max = Arrays.stream(arr).max();</span><br><span class="line">        <span class="keyword">if</span>(max.isPresent())&#123;</span><br><span class="line">            <span class="keyword">return</span> String.valueOf(max.getAsInt()).length();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"不存在最大值"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取一个整数某位上的数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> number 正整数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> digit 哪一位，10位还是百位</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 某位上的数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getDigit</span><span class="params">(<span class="keyword">int</span> number,<span class="keyword">int</span> digit)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (--digit&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            n*=<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> number/n%<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr=<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">123</span>,<span class="number">45</span>,<span class="number">98</span>,<span class="number">700</span>,<span class="number">15</span>&#125;;</span><br><span class="line">        sort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h3><p>堆排序的基本思想是：先构建一个最大堆，然后交换根节点和结尾节点<br>这样再调整堆的时候，就只需要调整左子树或者右子树。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造一个最大堆之后，就交换根节点和最后节点，然后长度-1再进行下一步</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 原始数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(arr==<span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">//先构建一个大根堆，这样的话，后面就只需要调整一边</span></span><br><span class="line">        buildMaxHeap(arr);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> newLen=arr.length-i;</span><br><span class="line">            maxHeap(arr,<span class="number">0</span>,newLen);</span><br><span class="line">            swap(newLen-<span class="number">1</span>,<span class="number">0</span>,arr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 先构建一个最大对，这样都后面调整的时候就不用左右子树都走，</span></span><br><span class="line"><span class="comment">     * 只需要走一边就行了</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">buildMaxHeap</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> parent = arr.length%<span class="number">2</span>==<span class="number">0</span>?(arr.length&gt;&gt;&gt;<span class="number">1</span>)-<span class="number">1</span>:arr.length&gt;&gt;&gt;<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(;parent&gt;=<span class="number">0</span>;parent--)&#123;</span><br><span class="line">            maxHeap(arr,parent,arr.length);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 调整当前堆位最大堆</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> i 根节点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> len 当前数组长度</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">maxHeap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> len)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left=i*<span class="number">2</span>+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> right=i*<span class="number">2</span>+<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> large=i;</span><br><span class="line">        <span class="keyword">if</span>(hasChild(left,len)&amp;&amp;arr[left]&gt;arr[large])&#123;</span><br><span class="line">            large=left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(hasChild(right,len)&amp;&amp;arr[right]&gt;arr[large])&#123;</span><br><span class="line">            large=right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (large!=i)&#123;</span><br><span class="line">            swap(i,large,arr);</span><br><span class="line">            maxHeap(arr,large,len);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断当前节点是否超过了数组长度，</span></span><br><span class="line"><span class="comment">     * 没有超过表明当前节点，还有孩子，</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> i 当前节点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> len 当前数组长度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 超过返回true，没有超过返回false</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">hasChild</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> len)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> i &lt;= len - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 把最大的浮上去，child浮到parent</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> parent 父亲节点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> child  孩子节点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> parent,<span class="keyword">int</span> child,<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[child]&gt;arr[parent])&#123;</span><br><span class="line">            <span class="keyword">int</span> tmp=arr[child];</span><br><span class="line">            arr[child]=arr[parent];</span><br><span class="line">            arr[parent]=tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr=&#123;<span class="number">4</span>,<span class="number">3</span>,<span class="number">26</span>,<span class="number">1</span>,<span class="number">0</span>&#125;;</span><br><span class="line">        sort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.threewater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 计数排序，用hashMap的特点进行排序</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        Map&lt;Integer, LinkedList&lt;Integer&gt;&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:arr)&#123;</span><br><span class="line">            map.computeIfAbsent(i, k-&gt;<span class="keyword">new</span> LinkedList&lt;&gt;()).addLast(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(LinkedList&lt;Integer&gt; list:map.values())&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> value:list)&#123;</span><br><span class="line">                arr[i++]=value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr=&#123;<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">        sort(arr);</span><br><span class="line">        System.out.println(Arrays.toString(arr));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/03/12/about-watercode/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/07/01/匿名内部类/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

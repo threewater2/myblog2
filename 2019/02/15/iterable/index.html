@@ -15,18 +15,18 @@
     <meta name="keywords" content="学习,">
   
 
-  <meta name="description" content="先来看看接口声明1234public interface Iterable&amp;lt;T&amp;gt; &amp;#123;	Iterator&amp;lt;T&amp;gt; iterator();    //java8默认方法省略...&amp;#125;  12345public interface Iterator&amp;lt;E&amp;gt; &amp;#123;    boolean hasNext();    E next();   	//ja">
+  <meta name="description" content="对于一个集合来说，如果我们要遍历这个list，我们必须知道，当前遍历到了哪里，下一次又该遍历哪里。也就说我们需要两个变量来保存这个状态，但是我们要重用遍历这个内容，这两个变量就应该跟着这个遍历功能走。也就是说来了一个集合，我们就要初始化这个变量，然后开始遍历，但是如果那个list发生了改变，我们是不知道的。例如有这样一次遍历1 2 3 4如果我们在遍历2时(此时index=1，下一个index是2">
 <meta name="keywords" content="学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="了解iterable接口">
 <meta property="og:url" content="https://threewater.xyz/2019/02/15/iterable/index.html">
 <meta property="og:site_name" content="山水">
-<meta property="og:description" content="先来看看接口声明1234public interface Iterable&amp;lt;T&amp;gt; &amp;#123;	Iterator&amp;lt;T&amp;gt; iterator();    //java8默认方法省略...&amp;#125;  12345public interface Iterator&amp;lt;E&amp;gt; &amp;#123;    boolean hasNext();    E next();   	//ja">
+<meta property="og:description" content="对于一个集合来说，如果我们要遍历这个list，我们必须知道，当前遍历到了哪里，下一次又该遍历哪里。也就说我们需要两个变量来保存这个状态，但是我们要重用遍历这个内容，这两个变量就应该跟着这个遍历功能走。也就是说来了一个集合，我们就要初始化这个变量，然后开始遍历，但是如果那个list发生了改变，我们是不知道的。例如有这样一次遍历1 2 3 4如果我们在遍历2时(此时index=1，下一个index是2">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-02-15T05:33:30.000Z">
+<meta property="og:updated_time" content="2020-07-06T08:23:50.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="了解iterable接口">
-<meta name="twitter:description" content="先来看看接口声明1234public interface Iterable&amp;lt;T&amp;gt; &amp;#123;	Iterator&amp;lt;T&amp;gt; iterator();    //java8默认方法省略...&amp;#125;  12345public interface Iterator&amp;lt;E&amp;gt; &amp;#123;    boolean hasNext();    E next();   	//ja">
+<meta name="twitter:description" content="对于一个集合来说，如果我们要遍历这个list，我们必须知道，当前遍历到了哪里，下一次又该遍历哪里。也就说我们需要两个变量来保存这个状态，但是我们要重用遍历这个内容，这两个变量就应该跟着这个遍历功能走。也就是说来了一个集合，我们就要初始化这个变量，然后开始遍历，但是如果那个list发生了改变，我们是不知道的。例如有这样一次遍历1 2 3 4如果我们在遍历2时(此时index=1，下一个index是2">
 
   
 
@@ -193,7 +193,8 @@
 
   <div class="article-content">
     
-      <h3 id="先来看看接口声明"><a href="#先来看看接口声明" class="headerlink" title="先来看看接口声明"></a>先来看看接口声明</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//java8默认方法省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <p>对于一个集合来说，如果我们要遍历这个list，我们必须知道，当前遍历到了哪里，下一次又该遍历哪里。<br>也就说我们需要两个变量来保存这个状态，但是我们要重用遍历这个内容，这两个变量就应该跟着这个遍历功能走。<br>也就是说来了一个集合，我们就要初始化这个变量，然后开始遍历，但是如果那个list发生了改变，我们是不知道的。<br>例如有这样一次遍历<br><code>1 2 3 4</code>如果我们在遍历2时(此时index=1，下一个index是2)决定把1删除，数组就变成了<code>2 3 4</code>,此时数组长度变成了3，<br>下一次遍历来临时(此时index=2)，但是这时index指向的是<code>4</code>这个元素了，元素<code>3</code>被跳过了。也就是说，<br>删除前面的元素，或者在前面添加，会对后面的元素造成不可预知的风险，但是对后面的元素操作，不会造成影响。<br>因此在遍历时，java禁止了对数组的删除(添加)操作，但是如果迭代器能够感知这种操作呢？那就只有一种办法，<br>就是通过迭代器删除，才能感知这种操作，但是Java的迭代器，也仅仅是支持删除当前遍历的元素。不支持删除前面的元素</p>
+<h3 id="先来看看接口声明"><a href="#先来看看接口声明" class="headerlink" title="先来看看接口声明"></a>先来看看接口声明</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function">Iterator&lt;T&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//java8默认方法省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">   	<span class="comment">//java8默认方法省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
