@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>rabbitmq概念 | 山水</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
+  
+
+  <meta name="description" content="RabbitMQ它是一个消息服务中间件，是生产者和消费者模式的一种实现生产者可以往rabbitmq发送消息，消费者可以接收rabbit中的消息 RabbitMQ的几个概念Exchange(交换机)生产者可以往Exchange发送消息。 Queue(队列)消费者监听队列，或者说从队列中取出消息 Exchange和Queue绑定Exchange会把生产者发送来的消息转发到QueueExchange也可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rabbitmq概念">
+<meta property="og:url" content="https://threewater.xyz/2020/11/04/rabbitmq概念/index.html">
+<meta property="og:site_name" content="山水">
+<meta property="og:description" content="RabbitMQ它是一个消息服务中间件，是生产者和消费者模式的一种实现生产者可以往rabbitmq发送消息，消费者可以接收rabbit中的消息 RabbitMQ的几个概念Exchange(交换机)生产者可以往Exchange发送消息。 Queue(队列)消费者监听队列，或者说从队列中取出消息 Exchange和Queue绑定Exchange会把生产者发送来的消息转发到QueueExchange也可">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-11-04T10:24:50.508Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rabbitmq概念">
+<meta name="twitter:description" content="RabbitMQ它是一个消息服务中间件，是生产者和消费者模式的一种实现生产者可以往rabbitmq发送消息，消费者可以接收rabbit中的消息 RabbitMQ的几个概念Exchange(交换机)生产者可以往Exchange发送消息。 Queue(队列)消费者监听队列，或者说从队列中取出消息 Exchange和Queue绑定Exchange会把生产者发送来的消息转发到QueueExchange也可">
+
+  
+
+  
+    <link rel="icon" href="/images/avatar.png">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ"><span class="toc-text">RabbitMQ</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ的几个概念"><span class="toc-text">RabbitMQ的几个概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Exchange-交换机"><span class="toc-text">Exchange(交换机)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Queue-队列"><span class="toc-text">Queue(队列)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Exchange和Queue绑定"><span class="toc-text">Exchange和Queue绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Channel"><span class="toc-text">Channel</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Confirm"><span class="toc-text">Confirm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Return"><span class="toc-text">Return</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exchange的种类"><span class="toc-text">Exchange的种类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Queue的种类"><span class="toc-text">Queue的种类</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-rabbitmq概念" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">rabbitmq概念</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.11.04</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>山水</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h3 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h3><p>它是一个消息服务中间件，是生产者和消费者模式的一种实现<br>生产者可以往rabbitmq发送消息，消费者可以接收rabbit中的消息</p>
+<h3 id="RabbitMQ的几个概念"><a href="#RabbitMQ的几个概念" class="headerlink" title="RabbitMQ的几个概念"></a>RabbitMQ的几个概念</h3><h4 id="Exchange-交换机"><a href="#Exchange-交换机" class="headerlink" title="Exchange(交换机)"></a>Exchange(交换机)</h4><p>生产者可以往Exchange发送消息。</p>
+<h4 id="Queue-队列"><a href="#Queue-队列" class="headerlink" title="Queue(队列)"></a>Queue(队列)</h4><p>消费者监听队列，或者说从队列中取出消息</p>
+<h4 id="Exchange和Queue绑定"><a href="#Exchange和Queue绑定" class="headerlink" title="Exchange和Queue绑定"></a>Exchange和Queue绑定</h4><p>Exchange会把生产者发送来的消息转发到Queue<br>Exchange也可以根据不同的路由策略决定发到指定的Queue</p>
+<h4 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h4><p>表示消费者与RabbitMQ维持的连接</p>
+<h3 id="Confirm"><a href="#Confirm" class="headerlink" title="Confirm"></a>Confirm</h3><p>发送消息可以配置一个Confirm回调函数<br>如果消息没有发送到交换机，这个函数就会被调用</p>
+<h3 id="Return"><a href="#Return" class="headerlink" title="Return"></a>Return</h3><p>如果交换机没能把消息发送到队列<br>那么这个函数就会被调用</p>
+<h3 id="Exchange的种类"><a href="#Exchange的种类" class="headerlink" title="Exchange的种类"></a>Exchange的种类</h3><p>Exchange总共只有4种<br><code>Direct</code>：
+当Queue到DirectExchange时，需要指定一个路由策略(routing key)<br>生产者发送消息也会带一个routing key。如果这两个routing key一样<br>就会匹配，DirectExchange就会进行转发</p>
+<p><code>fanout</code>:
+广播交换机，不需要指定routing key。<br>他会转发所有消息到其绑定的队列</p>
+<p><code>topic</code>:
+主题交换机是Direct的高级版。<br>Direct是安全匹配。Topic可以支持通配符，也就是支持模糊匹配</p>
+<p><code>headers</code>:
+消息除了消息体，还可以设置消息头。<br>headers可以根据头部信息进行匹配</p>
+<h4 id="Queue的种类"><a href="#Queue的种类" class="headerlink" title="Queue的种类"></a>Queue的种类</h4><p>根据Queue定义时设置的属性不同，可以分为以下两种</p>
+<p><code>延时队列</code><br>表示这个队列中的消息，过了一段时间后，如果没人取就会丢掉</p>
+<p><code>死信队列</code><br>消费者拒收(nack)了消息，又不让消息重新重新入队<br>那么消息就会被丢弃(默认)，如果这个队列配置了死信队列，<br>那么消息不会被简单的丢弃，而是发送到死信交换机，和死信队列<br>死信队列其实和普通的队列没有什么区别。只是其它队列创建时<br>可以有选择的设置被拒收的消息是丢弃还是选择发送到死信队列。</p>
+<p><code>懒队列</code><br>LazyQueue和普通的队列不同，Lazy会把消息立即持久化到磁盘。<br>这样如果队列很长，也不用担心队列撑爆内存。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持Three Water</div>
+        <ul>
+        
+          <li class="item">
+            
+              <span>微信扫一扫</span>
+            
+            <img src="/images/wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/alipay.jpg" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/10/28/spring-auto-config/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/11/15/面试准备之-多线程/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '2c51e73f4921ae736128',
+  clientSecret: '6e01170586c510d031916f0d0e52179551c12d5a',
+  repo: 'comment',
+  owner: 'threewater2',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: location.pathname,
+  admin: ['threewater2'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+<!-- Gitalk代码结束 -->
+
+
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

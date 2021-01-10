@@ -15,17 +15,17 @@
     <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
   
 
-  <meta name="description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+  <meta name="description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用 。及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量bean 4.1构建BeanPostProc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring生命周期">
 <meta property="og:url" content="https://threewater.xyz/2020/09/01/spring生命周期/index.html">
 <meta property="og:site_name" content="山水">
-<meta property="og:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+<meta property="og:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用 。及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量bean 4.1构建BeanPostProc">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-09-01T08:13:39.359Z">
+<meta property="og:updated_time" content="2020-11-19T09:59:05.573Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring生命周期">
-<meta name="twitter:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用BeanFactoryPostProcessor及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量">
+<meta name="twitter:description" content="BeanFactoryPostProcessor不由Spring的生命周期管 调用 。及其子类的构造方法  调用BeanFactoryPostProcessor的postProcessBeanFactory方法， 此时容器中已经有一些基本的bean(不包含以下所有的bean)。 比如各种BeanFactoryPostProcessor，以及系统环境变量bean 4.1构建BeanPostProc">
 
   
 
@@ -188,7 +188,7 @@
   <div class="article-content">
     
       <ol>
-<li>BeanFactoryPostProcessor不由Spring的生命周期管<br> 调用BeanFactoryPostProcessor及其子类的构造方法</li>
+<li>BeanFactoryPostProcessor不由Spring的生命周期管<br> 调用<br> 。及其子类的构造方法</li>
 <li> 调用BeanFactoryPostProcessor的postProcessBeanFactory方法，<br> 此时容器中已经有一些基本的bean(不包含以下所有的bean)。<br> 比如各种BeanFactoryPostProcessor，以及系统环境变量bean</li>
 <li>4.1构建BeanPostProcessor极其子类，包括InstantiationAwareBeanPostProcessor<br>4.2调用其init(@PostCountruct)方法</li>
 <li>从BeanPostProcessor构建出来以后，以后每次创建新的bean，都需要走以下流程。<br>5.1 InstantiationAwareBeanPostProcessor的<pre><code>postProcessBeforeInstantiation(Class&lt;?&gt; beanClass, String beanName)::Object方法</code></pre>5.2 新bean的构造方法(构建顺序:各种Aware类型的bean–&gt;FactoryBean(zai)–&gt;DestroyBean–&gt;InitializingBean–&gt;普通bean)<pre><code>新的bean构造方法调用完之后，都需要走InstantiationAwareBeanPostProcessor
