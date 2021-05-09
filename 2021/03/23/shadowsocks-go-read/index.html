@@ -7,7 +7,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>面试准备之-多线程 | 山水</title>
+  <title>shadowsocks-go源码分析 | 山水</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -15,17 +15,17 @@
     <meta name="keywords" content="forsigner,前端,设计,Hexo主题,前端开发,用户体验,设计,frontend,design,nodejs,JavaScript">
   
 
-  <meta name="description" content="SimpleDateFormat不是线程安全的">
+  <meta name="description" content="原理分析浏览器建立与socks-client的TCP连接浏览器通过刚刚建立的TCP连接发送他所支持的socks版本以及认证方式socks客户端从中选择其中一种(默认选择无加密的那种),回复响应报文浏览器根据socks客户端选择的认证方式发送socks请求报文,同时,报文中包含了希望与哪些IP建立TCP连接socks-client解析出其中的地址和端口,然后发送socks响应报文,表示可以建立连接s">
 <meta property="og:type" content="article">
-<meta property="og:title" content="面试准备之-多线程">
-<meta property="og:url" content="https://threewater.xyz/2020/11/15/面试准备之-多线程/index.html">
+<meta property="og:title" content="shadowsocks-go源码分析">
+<meta property="og:url" content="https://threewater.xyz/2021/03/23/shadowsocks-go-read/index.html">
 <meta property="og:site_name" content="山水">
-<meta property="og:description" content="SimpleDateFormat不是线程安全的">
+<meta property="og:description" content="原理分析浏览器建立与socks-client的TCP连接浏览器通过刚刚建立的TCP连接发送他所支持的socks版本以及认证方式socks客户端从中选择其中一种(默认选择无加密的那种),回复响应报文浏览器根据socks客户端选择的认证方式发送socks请求报文,同时,报文中包含了希望与哪些IP建立TCP连接socks-client解析出其中的地址和端口,然后发送socks响应报文,表示可以建立连接s">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-11-15T10:25:01.823Z">
+<meta property="og:updated_time" content="2021-03-23T02:28:42.580Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="面试准备之-多线程">
-<meta name="twitter:description" content="SimpleDateFormat不是线程安全的">
+<meta name="twitter:title" content="shadowsocks-go源码分析">
+<meta name="twitter:description" content="原理分析浏览器建立与socks-client的TCP连接浏览器通过刚刚建立的TCP连接发送他所支持的socks版本以及认证方式socks客户端从中选择其中一种(默认选择无加密的那种),回复响应报文浏览器根据socks客户端选择的认证方式发送socks请求报文,同时,报文中包含了希望与哪些IP建立TCP连接socks-client解析出其中的地址和端口,然后发送socks响应报文,表示可以建立连接s">
 
   
 
@@ -150,17 +150,22 @@
 </div>
 
 
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理分析"><span class="toc-text">原理分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于加密"><span class="toc-text">关于加密</span></a></li></ol>
+  </div>
+
 
 
 <div class="content content-post CENTER">
-   <article id="post-面试准备之-多线程" class="article article-type-post" itemprop="blogPost">
+   <article id="post-shadowsocks-go-read" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">面试准备之-多线程</h1>
+    <h1 class="post-title">shadowsocks-go源码分析</h1>
 
     <div class="article-meta">
       <span>
         <i class="icon-calendar"></i>
-        <span>2020.11.15</span>
+        <span>2021.03.23</span>
       </span>
 
       
@@ -182,9 +187,9 @@
 
   <div class="article-content">
     
-      <ol>
-<li>SimpleDateFormat不是线程安全的</li>
-</ol>
+      <h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>浏览器建立与socks-client的TCP连接<br>浏览器通过刚刚建立的TCP连接发送他所支持的socks版本以及认证方式<br>socks客户端从中选择其中一种(默认选择无加密的那种),回复响应报文<br>浏览器根据socks客户端选择的认证方式发送socks请求报文,同时,报文中包含了希望与哪些IP建立TCP连接<br>socks-client解析出其中的地址和端口,然后发送socks响应报文,表示可以建立连接<br>socks-client建立与socks-server的TCP连接<br>根据用户所配置的加密算法,对其TCP连接进行加密<br>加密成功后,sock-client发送前面解析出来的地址和端口发送给socks-server<br>由socks-server进行拨号,建立与目标地址和端口的TCP连接<br>以上过程完成之后,我们就有了这样一条连接<br>浏览器&lt;——无加密TCP——&gt;socks-client&lt;——加密TCP——&gt;socks-client&lt;——TCP——&gt;baidu<br>接下来,浏览器继续像这连接中发送数据<br>socks-client接收到数据之后,对其进行加密,然后把数据复制到与sock-server的TCP连接中<br>socks-server收到数据后,对其解密,然后再复制到与百度的TCP连接中.</p>
+<h2 id="关于加密"><a href="#关于加密" class="headerlink" title="关于加密"></a>关于加密</h2><p>首次socks-client向socks-server发送数据时<br>socks-client会生成一个随机的盐值用无加密的方式发送给server<br>当server首次读取client的数据时,会首先读取这个盐值,用来初始化自己的加密算法<br>如果server首次想要像client放送数据时,server也会生成一个盐值,放送给client<br>当client想要首次想要读取数据时,也会先读取到这个盐值,然后再初始化自己的算法<br>也就是说,对于client来说,读取和写入使用的是完全不同的盐值.对于server来说也是如此</p>
+<p>通过盐值+程序启动时我们设置的密码进行通信</p>
 
     
   </div>
@@ -222,10 +227,10 @@
 
    
   <div class="box-prev-next clearfix">
-    <a class="show pull-left" href="/2020/11/04/rabbitmq概念/">
+    <a class="show pull-left" href="/2020/11/15/面试准备之-多线程/">
         <i class="icon icon-angle-left"></i>
     </a>
-    <a class="show pull-right" href="/2021/03/23/shadowsocks-go-read/">
+    <a class="show pull-right" href="/2021/05/09/found-a-job/">
         <i class="icon icon-angle-right"></i>
     </a>
   </div>
